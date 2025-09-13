@@ -1,0 +1,6 @@
+{
+  "jest.runMode": "on-demand",
+  "testing.automaticallyOpenPeekView": "never",
+  "testing.automaticallyOpenPeekViewDuringAutoRun": false,
+  "typescript.preferences.includePackageJsonAutoImports": "off"
+}
