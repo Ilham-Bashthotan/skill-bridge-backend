@@ -1,6 +1,6 @@
 # Mentors API Specification
 
-This document describes the RESTful API endpoints for mentor operations in the platform.
+This document describes the RESTful API endpoints for mentor operations. Mentors are users with `role = "mentor"` in the unified users model.
 
 ---
 
@@ -29,8 +29,7 @@ Authorization: Bearer <mentor_token>
   "assigned_courses": 2,
   "total_students": 45,
   "active_consultations": 8,
-  "forum_answers_given": 23,
-  "average_student_progress": 78
+  "forum_answers_given": 23
 }
 ```
 
@@ -42,7 +41,7 @@ Authorization: Bearer <mentor_token>
 ```
 
 ### GET /mentors/profile
-Get current mentor profile information.
+Get current mentor profile information (from users table).
 
 **Headers:**
 ```
@@ -53,17 +52,15 @@ Authorization: Bearer <mentor_token>
 ```json
 {
   "id": 1,
-  "user_id": 1,
-  "expertise": "Mathematics and Programming",
+  "name": "Jane Smith",
+  "email": "jane@example.com",
+  "phone": "08123456789",
+  "role": "mentor",
   "bio": "Experienced educator with 5 years in programming instruction",
-  "is_active": true,
-  "user": {
-    "id": 1,
-    "name": "Jane Smith",
-    "email": "jane@example.com",
-    "phone": "08123456789",
-    "created_at": "2025-09-13T00:00:00Z"
-  }
+  "experience": "5 years",
+  "email_verified": false,
+  "created_at": "2025-09-13T00:00:00Z",
+  "updated_at": "2025-09-13T00:00:00Z"
 }
 ```
 
@@ -75,7 +72,7 @@ Authorization: Bearer <mentor_token>
 ```
 
 ### PUT /mentors/profile
-Update mentor profile information.
+Update mentor profile information (stored on user record).
 
 **Headers:**
 ```
@@ -85,8 +82,10 @@ Authorization: Bearer <mentor_token>
 **Request:**
 ```json
 {
-  "expertise": "Advanced Mathematics and Data Science",
-  "bio": "Experienced educator with 6 years in programming and data science instruction"
+  "name": "Jane Smith",
+  "phone": "08123456789",
+  "bio": "Experienced educator with 6 years in programming and data science instruction",
+  "experience": "6 years"
 }
 ```
 
@@ -94,12 +93,11 @@ Authorization: Bearer <mentor_token>
 ```json
 {
   "message": "Mentor profile updated successfully",
-  "mentor": {
+  "user": {
     "id": 1,
-    "user_id": 1,
-    "expertise": "Advanced Mathematics and Data Science",
     "bio": "Experienced educator with 6 years in programming and data science instruction",
-    "is_active": true
+    "experience": "6 years",
+    "updated_at": "2025-09-13T01:00:00Z"
   }
 }
 ```
@@ -127,7 +125,6 @@ Authorization: Bearer <mentor_token>
       "id": 1,
       "title": "Introduction to Programming",
       "description": "Learn basic programming concepts",
-      "duration": "4 weeks",
       "students_enrolled": 25,
       "assigned_at": "2025-09-01T00:00:00Z"
     }
@@ -149,9 +146,7 @@ Authorization: Bearer <mentor_token>
   "id": 1,
   "title": "Introduction to Programming",
   "description": "Learn basic programming concepts",
-  "duration": "4 weeks",
   "students_enrolled": 25,
-  "average_progress": 78,
   "materials_count": 12,
   "assigned_at": "2025-09-01T00:00:00Z"
 }
@@ -178,15 +173,9 @@ Authorization: Bearer <mentor_token>
   "students": [
     {
       "id": 1,
-      "user": {
-        "id": 1,
-        "name": "John Doe",
-        "email": "john@example.com"
-      },
-      "education_level": "SMA",
-      "progress_percentage": 85,
-      "enrolled_at": "2025-09-01T00:00:00Z",
-      "last_activity": "2025-09-12T15:30:00Z"
+      "name": "John Doe",
+      "email": "john@example.com",
+      "enrolled_at": "2025-09-01T00:00:00Z"
     }
   ]
 }
@@ -214,16 +203,14 @@ Authorization: Bearer <mentor_token>
     {
       "id": 1,
       "title": "Introduction to Variables",
-      "material_type": "text",
-      "completion_rate": 92,
-      "created_at": "2025-09-13T00:00:00Z"
+      "created_at": "2025-09-13T00:00:00Z",
+      "updated_at": "2025-09-13T00:00:00Z"
     },
     {
       "id": 2,
       "title": "Programming Basics Video",
-      "material_type": "video",
-      "completion_rate": 78,
-      "created_at": "2025-09-13T00:00:00Z"
+      "created_at": "2025-09-13T00:00:00Z",
+      "updated_at": "2025-09-13T00:00:00Z"
     }
   ]
 }
@@ -248,8 +235,7 @@ Authorization: Bearer <mentor_token>
 ```json
 {
   "title": "Advanced Programming Concepts",
-  "content": "Detailed explanation of advanced programming concepts...",
-  "material_type": "text"
+  "content": "Detailed explanation of advanced programming concepts..."
 }
 ```
 
@@ -261,8 +247,8 @@ Authorization: Bearer <mentor_token>
     "id": 3,
     "course_id": 1,
     "title": "Advanced Programming Concepts",
-    "material_type": "text",
-    "created_at": "2025-09-13T00:00:00Z"
+    "created_at": "2025-09-13T00:00:00Z",
+    "updated_at": "2025-09-13T00:00:00Z"
   }
 }
 ```
@@ -293,7 +279,13 @@ Authorization: Bearer <mentor_token>
 **Success Response:**
 ```json
 {
-  "message": "Course material updated successfully"
+  "message": "Course material updated successfully",
+  "material": {
+    "id": 3,
+    "course_id": 1,
+    "title": "Updated Programming Concepts",
+    "updated_at": "2025-09-13T01:30:00Z"
+  }
 }
 ```
 
@@ -339,17 +331,13 @@ Authorization: Bearer <mentor_token>
 {
   "student": {
     "id": 1,
-    "user": {
-      "name": "John Doe",
-      "email": "john@example.com"
-    },
-    "education_level": "SMA"
+    "name": "John Doe",
+    "email": "john@example.com"
   },
   "courses_progress": [
     {
       "course_id": 1,
       "course_title": "Introduction to Programming",
-      "progress_percentage": 85,
       "materials_completed": 10,
       "total_materials": 12,
       "last_activity": "2025-09-12T15:30:00Z"
@@ -366,7 +354,7 @@ Authorization: Bearer <mentor_token>
 ```
 
 ### PUT /mentors/status
-Update mentor availability status.
+Update mentor profile fields (subset).
 
 **Headers:**
 ```
@@ -376,15 +364,21 @@ Authorization: Bearer <mentor_token>
 **Request:**
 ```json
 {
-  "is_active": false
+  "bio": "Available next month",
+  "experience": "7 years"
 }
 ```
 
 **Success Response:**
 ```json
 {
-  "message": "Mentor status updated successfully",
-  "is_active": false
+  "message": "Mentor profile updated successfully",
+  "user": {
+    "id": 1,
+    "bio": "Available next month",
+    "experience": "7 years",
+    "updated_at": "2025-09-13T02:00:00Z"
+  }
 }
 ```
 
@@ -407,4 +401,4 @@ All error responses follow this format:
 
 ---
 
-*Last updated: 2025-09-13*
+*Last updated: 2025-09-16*

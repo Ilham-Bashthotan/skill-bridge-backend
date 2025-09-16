@@ -1,6 +1,6 @@
 # Students API Specification
 
-This document describes the RESTful API endpoints for student operations in the platform.
+This document describes the RESTful API endpoints for student operations. Students are users with `role = "student"` in the unified users model.
 
 ---
 
@@ -30,8 +30,7 @@ Authorization: Bearer <student_token>
   "completed_courses": 1,
   "certificates_earned": 1,
   "active_consultations": 2,
-  "forum_questions_asked": 5,
-  "overall_progress": 75
+  "forum_questions_asked": 5
 }
 ```
 
@@ -43,7 +42,7 @@ Authorization: Bearer <student_token>
 ```
 
 ### GET /students/profile
-Get current student profile information.
+Get current student profile information (from users table).
 
 **Headers:**
 ```
@@ -54,15 +53,15 @@ Authorization: Bearer <student_token>
 ```json
 {
   "id": 1,
-  "user_id": 1,
-  "education_level": "SMA",
-  "user": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com",
-    "phone": "08123456789",
-    "created_at": "2025-09-13T00:00:00Z"
-  }
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "08123456789",
+  "role": "student",
+  "bio": null,
+  "experience": null,
+  "email_verified": false,
+  "created_at": "2025-09-13T00:00:00Z",
+  "updated_at": "2025-09-13T00:00:00Z"
 }
 ```
 
@@ -74,7 +73,7 @@ Authorization: Bearer <student_token>
 ```
 
 ### PUT /students/profile
-Update student profile information.
+Update student profile information (stored on user record).
 
 **Headers:**
 ```
@@ -84,7 +83,10 @@ Authorization: Bearer <student_token>
 **Request:**
 ```json
 {
-  "education_level": "Vokasi"
+  "name": "John Doe",
+  "phone": "08123456789",
+  "bio": "Aspiring developer",
+  "experience": "Internship at XYZ"
 }
 ```
 
@@ -92,10 +94,11 @@ Authorization: Bearer <student_token>
 ```json
 {
   "message": "Student profile updated successfully",
-  "student": {
+  "user": {
     "id": 1,
-    "user_id": 1,
-    "education_level": "Vokasi"
+    "bio": "Aspiring developer",
+    "experience": "Internship at XYZ",
+    "updated_at": "2025-09-13T01:00:00Z"
   }
 }
 ```
@@ -128,9 +131,9 @@ Authorization: Bearer <student_token>
       "id": 1,
       "title": "Introduction to Programming",
       "description": "Learn basic programming concepts",
-      "duration": "4 weeks",
       "is_enrolled": false,
-      "created_at": "2025-09-13T00:00:00Z"
+      "created_at": "2025-09-13T00:00:00Z",
+      "updated_at": "2025-09-13T00:00:00Z"
     }
   ],
   "pagination": {
@@ -165,8 +168,6 @@ Authorization: Bearer <student_token>
       "id": 1,
       "title": "Introduction to Programming",
       "description": "Learn basic programming concepts",
-      "duration": "4 weeks",
-      "progress_percentage": 75,
       "is_completed": false,
       "enrolled_at": "2025-09-01T00:00:00Z"
     }
@@ -188,7 +189,7 @@ Authorization: Bearer <student_token>
   "message": "Successfully enrolled in course",
   "enrollment": {
     "course_id": 1,
-    "student_id": 1,
+    "user_id": 1,
     "enrolled_at": "2025-09-13T00:00:00Z"
   }
 }
@@ -215,8 +216,6 @@ Authorization: Bearer <student_token>
   "id": 1,
   "title": "Introduction to Programming",
   "description": "Learn basic programming concepts",
-  "duration": "4 weeks",
-  "progress_percentage": 75,
   "is_enrolled": true,
   "is_completed": false,
   "materials_count": 12,
@@ -246,18 +245,16 @@ Authorization: Bearer <student_token>
     {
       "id": 1,
       "title": "Introduction to Variables",
-      "material_type": "text",
       "is_completed": true,
-      "progress": 100,
-      "created_at": "2025-09-13T00:00:00Z"
+      "created_at": "2025-09-13T00:00:00Z",
+      "updated_at": "2025-09-13T00:00:00Z"
     },
     {
       "id": 2,
       "title": "Programming Basics Video",
-      "material_type": "video",
       "is_completed": false,
-      "progress": 60,
-      "created_at": "2025-09-13T00:00:00Z"
+      "created_at": "2025-09-13T00:00:00Z",
+      "updated_at": "2025-09-13T00:00:00Z"
     }
   ]
 }
@@ -281,7 +278,6 @@ Authorization: Bearer <student_token>
 **Request:**
 ```json
 {
-  "progress": 100,
   "completed": true
 }
 ```
@@ -292,7 +288,6 @@ Authorization: Bearer <student_token>
   "message": "Progress updated successfully",
   "progress": {
     "material_id": 1,
-    "progress": 100,
     "completed": true,
     "updated_at": "2025-09-13T00:00:00Z"
   }
@@ -325,7 +320,8 @@ Authorization: Bearer <student_token>
         "title": "Introduction to Programming"
       },
       "certificate_url": "https://certificates.skillbridge.com/cert_123.pdf",
-      "issued_at": "2025-09-10T00:00:00Z"
+      "created_at": "2025-09-10T00:00:00Z",
+      "updated_at": "2025-09-10T00:00:00Z"
     }
   ]
 }
@@ -345,11 +341,11 @@ Authorization: Bearer <student_token>
   "id": 1,
   "course": {
     "id": 1,
-    "title": "Introduction to Programming",
-    "duration": "4 weeks"
+    "title": "Introduction to Programming"
   },
   "certificate_url": "https://certificates.skillbridge.com/cert_123.pdf",
-  "issued_at": "2025-09-10T00:00:00Z"
+  "created_at": "2025-09-10T00:00:00Z",
+  "updated_at": "2025-09-10T00:00:00Z"
 }
 ```
 
@@ -372,4 +368,4 @@ All error responses follow this format:
 
 ---
 
-*Last updated: 2025-09-13*
+*Last updated: 2025-09-16*

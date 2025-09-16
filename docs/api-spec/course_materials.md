@@ -25,7 +25,7 @@ Authorization: Bearer <token>
 
 **Query Parameters:**
 - `course_id` (optional): Filter by course ID
-- `material_type` (optional): Filter by material type (text, video, quiz)
+- `q` (optional): Search by title or content
 - `page` (optional): Page number (default: 1)
 - `limit` (optional): Items per page (default: 10)
 
@@ -37,12 +37,12 @@ Authorization: Bearer <token>
       "id": 1,
       "course_id": 1,
       "title": "Introduction to Variables",
-      "material_type": "text",
       "course": {
         "id": 1,
         "title": "Introduction to Programming"
       },
-      "created_at": "2025-09-13T00:00:00Z"
+      "created_at": "2025-09-13T00:00:00Z",
+      "updated_at": "2025-09-13T00:00:00Z"
     }
   ],
   "pagination": {
@@ -76,13 +76,12 @@ Authorization: Bearer <token>
   "course_id": 1,
   "title": "Introduction to Variables",
   "content": "Variables are containers for storing data values...",
-  "material_type": "text",
   "course": {
     "id": 1,
-    "title": "Introduction to Programming",
-    "duration": "4 weeks"
+    "title": "Introduction to Programming"
   },
-  "created_at": "2025-09-13T00:00:00Z"
+  "created_at": "2025-09-13T00:00:00Z",
+  "updated_at": "2025-09-13T00:00:00Z"
 }
 ```
 
@@ -106,8 +105,7 @@ Authorization: Bearer <mentor_or_admin_token>
 {
   "course_id": 1,
   "title": "Functions and Methods",
-  "content": "Functions are reusable blocks of code that perform specific tasks...",
-  "material_type": "text"
+  "content": "Functions are reusable blocks of code that perform specific tasks..."
 }
 ```
 
@@ -120,8 +118,8 @@ Authorization: Bearer <mentor_or_admin_token>
     "course_id": 1,
     "title": "Functions and Methods",
     "content": "Functions are reusable blocks of code that perform specific tasks...",
-    "material_type": "text",
-    "created_at": "2025-09-13T00:00:00Z"
+    "created_at": "2025-09-13T00:00:00Z",
+    "updated_at": "2025-09-13T00:00:00Z"
   }
 }
 ```
@@ -145,8 +143,7 @@ Authorization: Bearer <mentor_or_admin_token>
 ```json
 {
   "title": "Advanced Functions and Methods",
-  "content": "Updated content about advanced functions and methods...",
-  "material_type": "video"
+  "content": "Updated content about advanced functions and methods..."
 }
 ```
 
@@ -159,8 +156,7 @@ Authorization: Bearer <mentor_or_admin_token>
     "course_id": 1,
     "title": "Advanced Functions and Methods",
     "content": "Updated content about advanced functions and methods...",
-    "material_type": "video",
-    "created_at": "2025-09-13T00:00:00Z"
+    "updated_at": "2025-09-13T00:00:00Z"
   }
 }
 ```
@@ -194,104 +190,11 @@ Authorization: Bearer <mentor_or_admin_token>
 }
 ```
 
-### GET /course-materials/:materialId/progress
-Get progress statistics for a specific course material.
+// Removed material progress aggregation endpoint (not represented in schema)
 
-**Headers:**
-```
-Authorization: Bearer <mentor_or_admin_token>
-```
+// Removed material types (no enum in schema)
 
-**Success Response:**
-```json
-{
-  "material": {
-    "id": 1,
-    "title": "Introduction to Variables",
-    "material_type": "text"
-  },
-  "total_students": 25,
-  "completed_students": 20,
-  "completion_rate": 80,
-  "average_progress": 85,
-  "progress_breakdown": {
-    "0-25": 2,
-    "26-50": 1,
-    "51-75": 2,
-    "76-100": 20
-  }
-}
-```
-
-**Error Response:**
-```json
-{
-  "error": "Course material not found or unauthorized"
-}
-```
-
-### GET /course-materials/types
-Get available material types.
-
-**Success Response:**
-```json
-{
-  "material_types": [
-    {
-      "value": "text",
-      "label": "Text Content",
-      "description": "Written educational content"
-    },
-    {
-      "value": "video",
-      "label": "Video Content",
-      "description": "Video-based educational content"
-    },
-    {
-      "value": "quiz",
-      "label": "Quiz/Assessment",
-      "description": "Interactive quiz or assessment"
-    }
-  ]
-}
-```
-
-### POST /course-materials/:materialId/duplicate
-Duplicate a course material to another course.
-
-**Headers:**
-```
-Authorization: Bearer <mentor_or_admin_token>
-```
-
-**Request:**
-```json
-{
-  "target_course_id": 2,
-  "new_title": "Variables in Python"
-}
-```
-
-**Success Response:**
-```json
-{
-  "message": "Course material duplicated successfully",
-  "new_material": {
-    "id": 15,
-    "course_id": 2,
-    "title": "Variables in Python",
-    "material_type": "text",
-    "created_at": "2025-09-13T01:00:00Z"
-  }
-}
-```
-
-**Error Response:**
-```json
-{
-  "error": "Target course not found or unauthorized"
-}
-```
+// Removed duplicate endpoint (out of scope)
 
 ### GET /course-materials/search
 Search course materials by content or title.
@@ -304,7 +207,6 @@ Authorization: Bearer <token>
 **Query Parameters:**
 - `q`: Search query
 - `course_id` (optional): Limit search to specific course
-- `material_type` (optional): Filter by material type
 - `page` (optional): Page number (default: 1)
 - `limit` (optional): Items per page (default: 10)
 
@@ -316,13 +218,13 @@ Authorization: Bearer <token>
       "id": 1,
       "course_id": 1,
       "title": "Introduction to Variables",
-      "material_type": "text",
       "course": {
         "id": 1,
         "title": "Introduction to Programming"
       },
       "relevance_score": 0.95,
-      "created_at": "2025-09-13T00:00:00Z"
+      "created_at": "2025-09-13T00:00:00Z",
+      "updated_at": "2025-09-13T00:00:00Z"
     }
   ],
   "pagination": {
@@ -341,51 +243,7 @@ Authorization: Bearer <token>
 }
 ```
 
-### PUT /course-materials/:materialId/order
-Update the order/position of a course material within its course.
-
-**Headers:**
-```
-Authorization: Bearer <mentor_or_admin_token>
-```
-
-**Request:**
-```json
-{
-  "position": 3
-}
-```
-
-**Success Response:**
-```json
-{
-  "message": "Course material order updated successfully",
-  "updated_materials": [
-    {
-      "id": 1,
-      "title": "Introduction",
-      "position": 1
-    },
-    {
-      "id": 2,
-      "title": "Basic Concepts",
-      "position": 2
-    },
-    {
-      "id": 3,
-      "title": "Variables",
-      "position": 3
-    }
-  ]
-}
-```
-
-**Error Response:**
-```json
-{
-  "error": "Invalid position value"
-}
-```
+// Removed ordering endpoint (not represented in schema)
 
 ---
 
@@ -399,4 +257,4 @@ All error responses follow this format:
 
 ---
 
-*Last updated: 2025-09-13*
+*Last updated: 2025-09-16*

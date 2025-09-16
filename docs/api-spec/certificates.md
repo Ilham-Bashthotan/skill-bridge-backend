@@ -1,6 +1,6 @@
 # Certificates API Specification
 
-This document describes the RESTful API endpoints for certificate management in the platform.
+This document describes the RESTful API endpoints for certificate management. Certificates are issued per (student[user], course) pair using the unified users model.
 
 ---
 
@@ -38,11 +38,11 @@ Authorization: Bearer <student_token>
       "course_id": 1,
       "course": {
         "id": 1,
-        "title": "Introduction to Programming",
-        "duration": "4 weeks"
+        "title": "Introduction to Programming"
       },
       "certificate_url": "https://certificates.skillbridge.com/cert_123.pdf",
-      "issued_at": "2025-09-10T00:00:00Z"
+      "created_at": "2025-09-10T00:00:00Z",
+      "updated_at": "2025-09-10T00:00:00Z"
     }
   ],
   "pagination": {
@@ -75,21 +75,17 @@ Authorization: Bearer <student_token>
   "id": 1,
   "student": {
     "id": 1,
-    "user": {
-      "name": "John Doe",
-      "email": "john@example.com"
-    },
-    "education_level": "SMA"
+    "name": "John Doe",
+    "email": "john@example.com"
   },
   "course": {
     "id": 1,
     "title": "Introduction to Programming",
-    "description": "Learn basic programming concepts",
-    "duration": "4 weeks"
+    "description": "Learn basic programming concepts"
   },
   "certificate_url": "https://certificates.skillbridge.com/cert_123.pdf",
-  "issued_at": "2025-09-10T00:00:00Z",
-  "verification_code": "CERT-2025-001-123"
+  "created_at": "2025-09-10T00:00:00Z",
+  "updated_at": "2025-09-10T00:00:00Z"
 }
 ```
 
@@ -124,8 +120,8 @@ Authorization: Bearer <student_token>
     "student_id": 1,
     "course_id": 1,
     "certificate_url": "https://certificates.skillbridge.com/cert_124.pdf",
-    "verification_code": "CERT-2025-001-124",
-    "issued_at": "2025-09-13T00:00:00Z"
+    "created_at": "2025-09-13T00:00:00Z",
+    "updated_at": "2025-09-13T00:00:00Z"
   }
 }
 ```
@@ -137,35 +133,7 @@ Authorization: Bearer <student_token>
 }
 ```
 
-### GET /certificates/verify/:verificationCode
-Verify a certificate using verification code.
-
-**Success Response:**
-```json
-{
-  "valid": true,
-  "certificate": {
-    "id": 1,
-    "student": {
-      "name": "John Doe"
-    },
-    "course": {
-      "title": "Introduction to Programming",
-      "duration": "4 weeks"
-    },
-    "issued_at": "2025-09-10T00:00:00Z",
-    "verification_code": "CERT-2025-001-123"
-  }
-}
-```
-
-**Error Response:**
-```json
-{
-  "valid": false,
-  "error": "Invalid verification code"
-}
-```
+// Verification by code is not modeled in the schema and is omitted.
 
 ### GET /certificates/download/:certificateId
 Download certificate PDF file.
@@ -213,19 +181,16 @@ Authorization: Bearer <admin_token>
       "id": 1,
       "student": {
         "id": 1,
-        "user": {
-          "name": "John Doe",
-          "email": "john@example.com"
-        },
-        "education_level": "SMA"
+        "name": "John Doe",
+        "email": "john@example.com"
       },
       "course": {
         "id": 1,
         "title": "Introduction to Programming"
       },
       "certificate_url": "https://certificates.skillbridge.com/cert_123.pdf",
-      "verification_code": "CERT-2025-001-123",
-      "issued_at": "2025-09-10T00:00:00Z"
+  "created_at": "2025-09-10T00:00:00Z",
+  "updated_at": "2025-09-10T00:00:00Z"
     }
   ],
   "pagination": {
@@ -261,8 +226,8 @@ Authorization: Bearer <admin_token>
     "student_id": 1,
     "course_id": 1,
     "certificate_url": "https://certificates.skillbridge.com/cert_125.pdf",
-    "verification_code": "CERT-2025-001-125",
-    "issued_at": "2025-09-13T01:00:00Z"
+    "created_at": "2025-09-13T01:00:00Z",
+    "updated_at": "2025-09-13T01:00:00Z"
   }
 }
 ```
@@ -310,13 +275,10 @@ Authorization: Bearer <student_token>
   "total_certificates": 3,
   "certificates_this_month": 1,
   "certificates_this_year": 3,
-  "courses_completed": 3,
-  "courses_enrolled": 5,
-  "completion_rate": 60,
   "latest_certificate": {
     "id": 3,
     "course_title": "Web Development Basics",
-    "issued_at": "2025-09-08T00:00:00Z"
+    "created_at": "2025-09-08T00:00:00Z"
   }
 }
 ```
@@ -334,30 +296,7 @@ Authorization: Bearer <admin_token>
 {
   "total_certificates_issued": 450,
   "certificates_this_month": 35,
-  "certificates_this_year": 420,
-  "most_popular_course": {
-    "id": 1,
-    "title": "Introduction to Programming",
-    "certificates_issued": 125
-  },
-  "recent_certificates": [
-    {
-      "id": 450,
-      "student_name": "Jane Smith",
-      "course_title": "Data Science Basics",
-      "issued_at": "2025-09-13T00:00:00Z"
-    }
-  ],
-  "monthly_breakdown": [
-    {
-      "month": "2025-09",
-      "count": 35
-    },
-    {
-      "month": "2025-08",
-      "count": 42
-    }
-  ]
+  "certificates_this_year": 420
 }
 ```
 
@@ -368,33 +307,7 @@ Authorization: Bearer <admin_token>
 }
 ```
 
-### PUT /certificates/:certificateId/regenerate
-Regenerate a certificate with updated information.
-
-**Headers:**
-```
-Authorization: Bearer <admin_token>
-```
-
-**Success Response:**
-```json
-{
-  "message": "Certificate regenerated successfully",
-  "certificate": {
-    "id": 1,
-    "certificate_url": "https://certificates.skillbridge.com/cert_123_v2.pdf",
-    "verification_code": "CERT-2025-001-123-V2",
-    "regenerated_at": "2025-09-13T02:00:00Z"
-  }
-}
-```
-
-**Error Response:**
-```json
-{
-  "error": "Certificate not found"
-}
-```
+// Regeneration and verification codes are not modeled and are omitted.
 
 ---
 
@@ -408,4 +321,4 @@ All error responses follow this format:
 
 ---
 
-*Last updated: 2025-09-13*
+*Last updated: 2025-09-16*

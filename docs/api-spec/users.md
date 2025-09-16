@@ -16,7 +16,7 @@ Authorization: Bearer <token>
 ## Endpoints
 
 ### POST /auth/register
-Register a new user account.
+Register a new user account. By default, new accounts are created with role "student" and email_verified = false.
 
 **Request:**
 ```json
@@ -37,7 +37,12 @@ Register a new user account.
     "name": "John Doe",
     "email": "john.doe@example.com",
     "phone": "08123456789",
-    "created_at": "2025-09-13T00:00:00Z"
+    "role": "student",
+    "bio": null,
+    "experience": null,
+    "email_verified": false,
+    "created_at": "2025-09-13T00:00:00Z",
+    "updated_at": "2025-09-13T00:00:00Z"
   }
 }
 ```
@@ -68,7 +73,10 @@ Authenticate user and get access token.
     "id": 1,
     "name": "John Doe",
     "email": "john.doe@example.com",
-    "role": "student"
+    "role": "student",
+    "bio": null,
+    "experience": null,
+    "email_verified": false
   }
 }
 ```
@@ -95,6 +103,10 @@ Authorization: Bearer <token>
   "name": "John Doe",
   "email": "john.doe@example.com",
   "phone": "08123456789",
+  "role": "student",
+  "bio": null,
+  "experience": null,
+  "email_verified": false,
   "created_at": "2025-09-13T00:00:00Z",
   "updated_at": "2025-09-13T00:00:00Z"
 }
@@ -108,7 +120,7 @@ Authorization: Bearer <token>
 ```
 
 ### PUT /users/profile
-Update current user profile information.
+Update current user profile information. Only name, phone, bio, and experience can be updated by the user.
 
 **Headers:**
 ```
@@ -119,7 +131,9 @@ Authorization: Bearer <token>
 ```json
 {
   "name": "John Smith",
-  "phone": "08987654321"
+  "phone": "08987654321",
+  "bio": "Aspiring frontend developer.",
+  "experience": "1 year building React projects"
 }
 ```
 
@@ -132,6 +146,11 @@ Authorization: Bearer <token>
     "name": "John Smith",
     "email": "john.doe@example.com",
     "phone": "08987654321",
+    "role": "student",
+    "bio": "Aspiring frontend developer.",
+    "experience": "1 year building React projects",
+    "email_verified": false,
+    "created_at": "2025-09-13T00:00:00Z",
     "updated_at": "2025-09-13T01:00:00Z"
   }
 }
@@ -215,4 +234,4 @@ All error responses follow this format:
 
 ---
 
-*Last updated: 2025-09-13*
+*Last updated: 2025-09-16*

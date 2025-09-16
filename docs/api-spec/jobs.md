@@ -38,11 +38,10 @@ Get list of all available jobs.
       "location": "Jakarta",
       "admin": {
         "id": 1,
-        "user": {
-          "name": "Admin User"
-        }
+        "name": "Admin User"
       },
-      "created_at": "2025-09-13T00:00:00Z"
+      "created_at": "2025-09-13T00:00:00Z",
+      "updated_at": "2025-09-13T00:00:00Z"
     }
   ],
   "pagination": {
@@ -75,11 +74,8 @@ Get detailed information about a specific job.
   "location": "Jakarta",
   "admin": {
     "id": 1,
-    "user": {
-      "name": "Admin User",
-      "email": "admin@example.com"
-    },
-    "position": "content manager"
+    "name": "Admin User",
+    "email": "admin@example.com"
   },
   "created_at": "2025-09-13T00:00:00Z"
 }
@@ -165,7 +161,7 @@ Authorization: Bearer <admin_token>
     "company": "Tech Solutions Inc",
     "requirements": "Updated requirements...",
     "location": "Jakarta (Remote possible)",
-    "created_at": "2025-09-13T00:00:00Z"
+    "updated_at": "2025-09-13T01:15:00Z"
   }
 }
 ```
@@ -210,7 +206,6 @@ Authorization: Bearer <admin_token>
 **Query Parameters:**
 - `page` (optional): Page number (default: 1)
 - `limit` (optional): Items per page (default: 10)
-- `status` (optional): Filter by status (active, inactive)
 
 **Success Response:**
 ```json
@@ -219,12 +214,9 @@ Authorization: Bearer <admin_token>
     {
       "id": 1,
       "title": "Frontend Developer",
-      "description": "Join our team as a Frontend Developer...",
       "company": "Tech Solutions Inc",
       "location": "Jakarta",
-      "created_at": "2025-09-13T00:00:00Z",
-      "applications_count": 15,
-      "views_count": 120
+      "created_at": "2025-09-13T00:00:00Z"
     }
   ],
   "pagination": {
@@ -403,92 +395,7 @@ Get list of job locations.
 }
 ```
 
-### POST /jobs/:jobId/bookmark
-Bookmark a job for later viewing (student only).
-
-**Headers:**
-```
-Authorization: Bearer <student_token>
-```
-
-**Success Response:**
-```json
-{
-  "message": "Job bookmarked successfully",
-  "bookmark": {
-    "id": 1,
-    "student_id": 1,
-    "job_id": 1,
-    "created_at": "2025-09-13T01:30:00Z"
-  }
-}
-```
-
-**Error Response:**
-```json
-{
-  "error": "Job already bookmarked"
-}
-```
-
-### DELETE /jobs/:jobId/bookmark
-Remove job bookmark (student only).
-
-**Headers:**
-```
-Authorization: Bearer <student_token>
-```
-
-**Success Response:**
-```json
-{
-  "message": "Job bookmark removed successfully"
-}
-```
-
-**Error Response:**
-```json
-{
-  "error": "Bookmark not found"
-}
-```
-
-### GET /jobs/bookmarks
-Get bookmarked jobs for current student.
-
-**Headers:**
-```
-Authorization: Bearer <student_token>
-```
-
-**Query Parameters:**
-- `page` (optional): Page number (default: 1)
-- `limit` (optional): Items per page (default: 10)
-
-**Success Response:**
-```json
-{
-  "bookmarks": [
-    {
-      "id": 1,
-      "job": {
-        "id": 1,
-        "title": "Frontend Developer",
-        "company": "Tech Solutions Inc",
-        "location": "Jakarta",
-        "created_at": "2025-09-13T00:00:00Z"
-      },
-      "bookmarked_at": "2025-09-13T01:30:00Z"
-    }
-  ],
-  "pagination": {
-    "page": 1,
-    "limit": 10,
-    "total": 3,
-    "total_pages": 1
-  }
-}
-```
+// Bookmarks endpoints removed (not represented in schema)
 
 ---
 
@@ -502,4 +409,4 @@ All error responses follow this format:
 
 ---
 
-*Last updated: 2025-09-13*
+*Last updated: 2025-09-16*

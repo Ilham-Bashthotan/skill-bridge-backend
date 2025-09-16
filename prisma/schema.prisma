@@ -12,3 +12,218 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// ==========================
+// Enums
+// ==========================
+enum Role {
+  admin
+  mentor
+  student
+}
+
+// ==========================
+// Models
+// ==========================
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(100)
+  email         String   @unique @db.VarChar(254)
+  phone         String?  @db.VarChar(20)
+  password      String   @db.VarChar(60)
+  role          Role
+  bio           String?  @db.VarChar(500)
+  experience    String?  @db.VarChar(255)
+  emailVerified Boolean  @default(false) @map("email_verified")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  courseMentors         CourseMentor[]
+  courseProgress        CourseProgress[]       @relation("StudentProgress")
+  certificates          Certificate[]          @relation("StudentCertificates")
+  forumQuestions        ForumQuestion[]        @relation("StudentForumQuestions")
+  forumAnswers          ForumAnswer[]
+  consultationQuestions ConsultationQuestion[] @relation("StudentConsultations")
+  consultationAnswers   ConsultationAnswer[]   @relation("MentorConsultationAnswers")
+  jobs                  Job[]                  @relation("AdminJobs")
+
+  @@index([role])
+  @@index([createdAt])
+  @@index([role, createdAt])
+  @@index([emailVerified])
+  @@index([phone])
+  @@map("users")
+}
+
+model Course {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(150)
+  description String   @db.Text
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  materials    CourseMaterial[]
+  mentors      CourseMentor[]
+  certificates Certificate[]
+
+  @@index([title])
+  @@map("courses")
+}
+
+model CourseMentor {
+  id        Int      @id @default(autoincrement())
+  courseId  Int      @map("course_id")
+  mentorId  Int      @map("mentor_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  course Course @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  mentor User   @relation(fields: [mentorId], references: [id], onDelete: Restrict)
+
+  @@unique([courseId, mentorId])
+  @@index([courseId])
+  @@index([mentorId])
+  @@map("course_mentors")
+}
+
+model CourseMaterial {
+  id        Int      @id @default(autoincrement())
+  courseId  Int      @map("course_id")
+  title     String   @db.VarChar(150)
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  course   Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress CourseProgress[]
+
+  @@index([courseId])
+  @@map("course_materials")
+}
+
+model CourseProgress {
+  id               Int      @id @default(autoincrement())
+  studentId        Int      @map("student_id")
+  courseMaterialId Int      @map("course_material_id")
+  completed        Boolean  @default(false)
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  student        User           @relation("StudentProgress", fields: [studentId], references: [id], onDelete: Restrict)
+  courseMaterial CourseMaterial @relation(fields: [courseMaterialId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, courseMaterialId])
+  @@index([studentId])
+  @@index([courseMaterialId])
+  @@map("course_progress")
+}
+
+model Certificate {
+  id             Int      @id @default(autoincrement())
+  studentId      Int      @map("student_id")
+  courseId       Int      @map("course_id")
+  certificateUrl String   @map("certificate_url") @db.Text
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  student User   @relation("StudentCertificates", fields: [studentId], references: [id], onDelete: Restrict)
+  course  Course @relation(fields: [courseId], references: [id], onDelete: Restrict)
+
+  @@unique([studentId, courseId])
+  @@index([studentId])
+  @@index([courseId])
+  @@map("certificates")
+}
+
+model Job {
+  id           Int      @id @default(autoincrement())
+  adminId      Int      @map("admin_id")
+  title        String   @db.VarChar(150)
+  description  String   @db.Text
+  company      String   @db.VarChar(150)
+  requirements String   @db.Text
+  location     String   @db.VarChar(100)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  admin User @relation("AdminJobs", fields: [adminId], references: [id], onDelete: Restrict)
+
+  @@index([adminId])
+  @@index([title])
+  @@index([company])
+  @@index([location])
+  @@map("jobs")
+}
+
+model ForumQuestion {
+  id        Int      @id @default(autoincrement())
+  studentId Int      @map("student_id")
+  title     String   @db.VarChar(150)
+  message   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  student User          @relation("StudentForumQuestions", fields: [studentId], references: [id], onDelete: Restrict)
+  answers ForumAnswer[]
+
+  @@index([studentId])
+  @@map("forum_questions")
+}
+
+model ForumAnswer {
+  id         Int      @id @default(autoincrement())
+  questionId Int      @map("question_id")
+  userId     Int      @map("user_id")
+  message    String   @db.Text
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  question ForumQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user     User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([questionId])
+  @@index([userId])
+  @@map("forum_answers")
+}
+
+model ConsultationQuestion {
+  id        Int      @id @default(autoincrement())
+  studentId Int      @map("student_id")
+  title     String   @db.VarChar(150)
+  message   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  student User                 @relation("StudentConsultations", fields: [studentId], references: [id], onDelete: Restrict)
+  answers ConsultationAnswer[]
+
+  @@index([studentId])
+  @@map("consultations_questions")
+}
+
+model ConsultationAnswer {
+  id                      Int      @id @default(autoincrement())
+  consultationsQuestionId Int      @map("consultations_question_id")
+  mentorId                Int      @map("mentor_id")
+  message                 String   @db.Text
+  createdAt               DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  question ConsultationQuestion @relation(fields: [consultationsQuestionId], references: [id], onDelete: Cascade)
+  mentor   User                 @relation("MentorConsultationAnswers", fields: [mentorId], references: [id], onDelete: Restrict)
+
+  @@index([consultationsQuestionId])
+  @@index([mentorId])
+  @@map("consultations_answers")
+}

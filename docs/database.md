@@ -4,32 +4,24 @@
 // ==========================
 Table users {
   id int [pk, increment]
-  name varchar
-  email varchar [unique]
-  phone varchar
-  password varchar
-  created_at timestamp
-  updated_at timestamp
-}
+  name varchar(100)
+  email varchar(254) [unique]
+  phone varchar(20)
+  password varchar(60)
+  role enum(admin,mentor,student)
+  bio varchar(500)
+  experience varchar(255)
+  email_verified boolean [default: false]
+  created_at timestamptz [default: now()]
+  updated_at timestamptz [default: now()]
 
-Table admins {
-  id int [pk, increment]
-  user_id int [ref: > users.id]
-  position varchar // e.g., super admin, content manager
-}
-
-Table students {
-  id int [pk, increment]
-  user_id int [ref: > users.id]
-  education_level varchar // SMP, SMA, Vokasi
-}
-
-Table mentors {
-  id int [pk, increment]
-  user_id int [ref: > users.id]
-  expertise varchar
-  bio text
-  is_active bool
+  Indexes {
+    (role)
+    (created_at)
+    (role, created_at)
+    (email_verified)
+    (phone)
+  }
 }
 
 // ==========================
@@ -37,60 +29,94 @@ Table mentors {
 // ==========================
 Table courses {
   id int [pk, increment]
-  title varchar
+  title varchar(150)
   description text
-  duration varchar
-  created_at timestamp
-  updated_at timestamp
+  created_at timestamptz [default: now()]
+  updated_at timestamptz [default: now()]
+
+  Indexes {
+    (title)
+  }
 }
 
 Table course_mentors {
   id int [pk, increment]
   course_id int [ref: > courses.id]
-  mentor_id int [ref: > mentors.id]
-  assigned_at timestamp
+  mentor_id int [ref: > users.id]
+  created_at timestamptz [default: now()]
+  updated_at timestamptz [default: now()]
+
+  Indexes {
+    (course_id)
+    (mentor_id)
+    (course_id, mentor_id) [unique]
+  }
 }
 
 Table course_materials {
   id int [pk, increment]
   course_id int [ref: > courses.id]
-  title varchar
+  title varchar(150)
   content text
-  material_type varchar // text, video, quiz
-  created_at timestamp
+  created_at timestamptz [default: now()]
+  updated_at timestamptz [default: now()]
+
+  Indexes {
+    (course_id)
+  }
 }
 
 Table course_progress {
   id int [pk, increment]
-  student_id int [ref: > students.id]
+  student_id int [ref: > users.id]
   course_material_id int [ref: > course_materials.id]
-  progress int // 0-100%
-  completed boolean
-  updated_at timestamp
+  completed boolean [default: false]
+  created_at timestamptz [default: now()]
+  updated_at timestamptz [default: now()]
+
+  Indexes {
+    (student_id)
+    (course_material_id)
+    (student_id, course_material_id) [unique]
+  }
 }
 
 Table certificates {
   id int [pk, increment]
-  student_id int [ref: > students.id]
+  student_id int [ref: > users.id]
   course_id int [ref: > courses.id]
-  certificate_url varchar
-  issued_at timestamp
+  certificate_url text
+  created_at timestamptz [default: now()]
+  updated_at timestamptz [default: now()]
+
+  Indexes {
+    (student_id)
+    (course_id)
+    (student_id, course_id) [unique]
+  }
 }
 
 // ==========================
 // Job Board
 // ==========================
 
-
 Table jobs {
   id int [pk, increment]
-  admin_id int [ref: > admins.id]
-  title varchar
+  admin_id int [ref: > users.id]
+  title varchar(150)
   description text
-  company text
+  company varchar(150)
   requirements text
-  location varchar
-  created_at timestamp
+  location varchar(100)
+  created_at timestamptz [default: now()]
+  updated_at timestamptz [default: now()]
+
+  Indexes {
+    (admin_id)
+    (title)
+    (company)
+    (location)
+  }
 }
 
 // ==========================
@@ -98,18 +124,29 @@ Table jobs {
 // ==========================
 Table forum_questions {
   id int [pk, increment]
-  student_id int [ref: > students.id]
-  title varchar
-  content text
-  created_at timestamp
+  student_id int [ref: > users.id]
+  title varchar(150)
+  message text
+  created_at timestamptz [default: now()]
+  updated_at timestamptz [default: now()]
+
+  Indexes {
+    (student_id)
+  }
 }
 
 Table forum_answers {
   id int [pk, increment]
   question_id int [ref: > forum_questions.id]
   user_id int [ref: > users.id] // bisa student/mentor jawab
-  content text
-  created_at timestamp
+  message text
+  created_at timestamptz [default: now()]
+  updated_at timestamptz [default: now()]
+
+  Indexes {
+    (question_id)
+    (user_id)
+  }
 }
 
 // ==========================
@@ -117,17 +154,28 @@ Table forum_answers {
 // ==========================
 Table consultations_questions {
   id int [pk, increment]
-  student_id int [ref: > students.id]
-  job_topic int [ref: > jobs.id]
+  student_id int [ref: > users.id]
+  title varchar(150)
   message text
-  created_at timestamp
+  created_at timestamptz [default: now()]
+  updated_at timestamptz [default: now()]
+
+  Indexes {
+    (student_id)
+  }
 }
 
 Table consultations_answers {
   id int [pk, increment]
   consultations_question_id int [ref: > consultations_questions.id]
-  user_id int [ref: > users.id]
+  mentor_id int [ref: > users.id]
   message text
-  created_at timestamp
+  created_at timestamptz [default: now()]
+  updated_at timestamptz [default: now()]
+
+  Indexes {
+    (consultations_question_id)
+    (mentor_id)
+  }
 }
 ```

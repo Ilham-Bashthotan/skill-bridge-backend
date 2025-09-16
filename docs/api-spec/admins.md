@@ -1,6 +1,6 @@
 # Admins API Specification
 
-This document describes the RESTful API endpoints for admin management in the platform.
+This document describes the RESTful API endpoints for admin operations. Admins are regular users with `role = "admin"` in the unified users model.
 
 ---
 
@@ -32,7 +32,6 @@ Authorization: Bearer <admin_token>
   "admins_count": 5,
   "courses_count": 15,
   "jobs_count": 8,
-  "active_consultations": 12,
   "forum_questions": 45
 }
 ```
@@ -45,7 +44,7 @@ Authorization: Bearer <admin_token>
 ```
 
 ### GET /admins/profile
-Get current admin profile information.
+Get current admin profile information (from users table).
 
 **Headers:**
 ```
@@ -56,14 +55,15 @@ Authorization: Bearer <admin_token>
 ```json
 {
   "id": 1,
-  "user_id": 1,
-  "position": "super admin",
-  "user": {
-    "id": 1,
-    "name": "Admin User",
-    "email": "admin@example.com",
-    "phone": "08123456789"
-  }
+  "name": "Admin User",
+  "email": "admin@example.com",
+  "phone": "08123456789",
+  "role": "admin",
+  "bio": null,
+  "experience": null,
+  "email_verified": false,
+  "created_at": "2025-09-13T00:00:00Z",
+  "updated_at": "2025-09-13T00:00:00Z"
 }
 ```
 
@@ -75,7 +75,7 @@ Authorization: Bearer <admin_token>
 ```
 
 ### PUT /admins/profile
-Update admin profile information.
+Update current admin profile information (stored on user record).
 
 **Headers:**
 ```
@@ -85,7 +85,10 @@ Authorization: Bearer <admin_token>
 **Request:**
 ```json
 {
-  "position": "content manager"
+  "name": "Admin User",
+  "phone": "08123456789",
+  "bio": "Platform administrator",
+  "experience": "3 years"
 }
 ```
 
@@ -93,10 +96,13 @@ Authorization: Bearer <admin_token>
 ```json
 {
   "message": "Admin profile updated successfully",
-  "admin": {
+  "user": {
     "id": 1,
-    "user_id": 1,
-    "position": "content manager"
+    "name": "Admin User",
+    "phone": "08123456789",
+    "bio": "Platform administrator",
+    "experience": "3 years",
+    "updated_at": "2025-09-13T01:00:00Z"
   }
 }
 ```
@@ -131,7 +137,9 @@ Authorization: Bearer <admin_token>
       "email": "john@example.com",
       "phone": "08123456789",
       "role": "student",
-      "created_at": "2025-09-13T00:00:00Z"
+      "email_verified": false,
+      "created_at": "2025-09-13T00:00:00Z",
+      "updated_at": "2025-09-13T00:00:00Z"
     }
   ],
   "pagination": {
@@ -165,12 +173,12 @@ Authorization: Bearer <admin_token>
   "name": "John Doe",
   "email": "john@example.com",
   "phone": "08123456789",
+  "role": "student",
+  "bio": null,
+  "experience": null,
+  "email_verified": false,
   "created_at": "2025-09-13T00:00:00Z",
-  "updated_at": "2025-09-13T00:00:00Z",
-  "role_details": {
-    "role": "student",
-    "education_level": "SMA"
-  }
+  "updated_at": "2025-09-13T00:00:00Z"
 }
 ```
 
@@ -181,8 +189,8 @@ Authorization: Bearer <admin_token>
 }
 ```
 
-### PUT /admins/users/:userId/status
-Update user status (activate/deactivate).
+### PUT /admins/users/:userId/role
+Update user's role (admin only).
 
 **Headers:**
 ```
@@ -192,14 +200,19 @@ Authorization: Bearer <admin_token>
 **Request:**
 ```json
 {
-  "is_active": false
+  "role": "mentor"
 }
 ```
 
 **Success Response:**
 ```json
 {
-  "message": "User status updated successfully"
+  "message": "User role updated successfully",
+  "user": {
+    "id": 1,
+    "role": "mentor",
+    "updated_at": "2025-09-13T00:10:00Z"
+  }
 }
 ```
 
@@ -233,7 +246,7 @@ Authorization: Bearer <admin_token>
 ```
 
 ### POST /admins/create-admin
-Create a new admin user.
+Create a new admin user (creates a user with role=admin).
 
 **Headers:**
 ```
@@ -246,8 +259,7 @@ Authorization: Bearer <admin_token>
   "name": "New Admin",
   "email": "newadmin@example.com",
   "phone": "08987654321",
-  "password": "securePassword123",
-  "position": "content manager"
+  "password": "securePassword123"
 }
 ```
 
@@ -255,15 +267,13 @@ Authorization: Bearer <admin_token>
 ```json
 {
   "message": "Admin created successfully",
-  "admin": {
-    "id": 2,
-    "user_id": 151,
-    "position": "content manager",
-    "user": {
-      "id": 151,
-      "name": "New Admin",
-      "email": "newadmin@example.com"
-    }
+  "user": {
+    "id": 151,
+    "name": "New Admin",
+    "email": "newadmin@example.com",
+    "phone": "08987654321",
+    "role": "admin",
+    "created_at": "2025-09-13T00:00:00Z"
   }
 }
 ```
@@ -276,7 +286,7 @@ Authorization: Bearer <admin_token>
 ```
 
 ### GET /admins/system-logs
-Get system activity logs.
+Get system activity logs. (Optional feature; not represented in schema.)
 
 **Headers:**
 ```
@@ -297,7 +307,7 @@ Authorization: Bearer <admin_token>
       "id": 1,
       "action": "user_created",
       "user_id": 1,
-      "admin_id": 1,
+  "admin_id": 1,
       "details": "Created new student account",
       "timestamp": "2025-09-13T00:00:00Z"
     }
@@ -330,4 +340,4 @@ All error responses follow this format:
 
 ---
 
-*Last updated: 2025-09-13*
+*Last updated: 2025-09-16*

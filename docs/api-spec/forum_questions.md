@@ -34,13 +34,10 @@ Get list of all forum questions.
       "id": 1,
       "student_id": 1,
       "title": "How to implement React hooks?",
-      "content": "I'm having trouble understanding how to properly use React hooks in my components...",
+      "message": "I'm having trouble understanding how to properly use React hooks in my components...",
       "student": {
         "id": 1,
-        "user": {
-          "name": "John Doe"
-        },
-        "education_level": "SMA"
+        "name": "John Doe"
       },
       "answers_count": 3,
       "latest_answer": {
@@ -50,7 +47,8 @@ Get list of all forum questions.
           "name": "Jane Smith"
         }
       },
-      "created_at": "2025-09-10T09:00:00Z"
+      "created_at": "2025-09-10T09:00:00Z",
+      "updated_at": "2025-09-12T14:30:00Z"
     }
   ],
   "pagination": {
@@ -78,20 +76,17 @@ Get detailed information about a specific question with all answers.
   "id": 1,
   "student_id": 1,
   "title": "How to implement React hooks?",
-  "content": "I'm having trouble understanding how to properly use React hooks in my components. Specifically, I'm confused about useState and useEffect. Can someone provide some examples?",
+  "message": "I'm having trouble understanding how to properly use React hooks in my components. Specifically, I'm confused about useState and useEffect. Can someone provide some examples?",
   "student": {
     "id": 1,
-    "user": {
-      "name": "John Doe",
-      "email": "john@example.com"
-    },
-    "education_level": "SMA"
+    "name": "John Doe",
+    "email": "john@example.com"
   },
   "answers": [
     {
       "id": 1,
       "user_id": 2,
-      "content": "React hooks are functions that let you use state and other React features...",
+  "message": "React hooks are functions that let you use state and other React features...",
       "user": {
         "id": 2,
         "name": "Jane Smith",
@@ -124,7 +119,7 @@ Authorization: Bearer <student_token>
 ```json
 {
   "title": "Best practices for API design?",
-  "content": "I'm working on my first API project and wondering what are the best practices for designing RESTful APIs. Any recommendations?"
+  "message": "I'm working on my first API project and wondering what are the best practices for designing RESTful APIs. Any recommendations?"
 }
 ```
 
@@ -136,8 +131,9 @@ Authorization: Bearer <student_token>
     "id": 2,
     "student_id": 1,
     "title": "Best practices for API design?",
-    "content": "I'm working on my first API project and wondering what are the best practices for designing RESTful APIs. Any recommendations?",
-    "created_at": "2025-09-13T01:00:00Z"
+    "message": "I'm working on my first API project and wondering what are the best practices for designing RESTful APIs. Any recommendations?",
+    "created_at": "2025-09-13T01:00:00Z",
+    "updated_at": "2025-09-13T01:00:00Z"
   }
 }
 ```
@@ -161,7 +157,7 @@ Authorization: Bearer <student_token>
 ```json
 {
   "title": "Updated: Best practices for API design?",
-  "content": "Updated content with more specific details about my API project..."
+  "message": "Updated content with more specific details about my API project..."
 }
 ```
 
@@ -173,8 +169,9 @@ Authorization: Bearer <student_token>
     "id": 1,
     "student_id": 1,
     "title": "Updated: Best practices for API design?",
-    "content": "Updated content with more specific details about my API project...",
-    "created_at": "2025-09-10T09:00:00Z"
+    "message": "Updated content with more specific details about my API project...",
+    "created_at": "2025-09-10T09:00:00Z",
+    "updated_at": "2025-09-13T02:00:00Z"
   }
 }
 ```
@@ -228,16 +225,16 @@ Authorization: Bearer <student_token>
     {
       "id": 1,
       "title": "How to implement React hooks?",
-      "content": "I'm having trouble understanding...",
+      "message": "I'm having trouble understanding...",
       "answers_count": 3,
-      "status": "answered",
       "latest_answer": {
         "created_at": "2025-09-12T14:30:00Z",
         "user": {
           "name": "Jane Smith"
         }
       },
-      "created_at": "2025-09-10T09:00:00Z"
+      "created_at": "2025-09-10T09:00:00Z",
+      "updated_at": "2025-09-12T14:30:00Z"
     }
   ],
   "pagination": {
@@ -253,7 +250,7 @@ Authorization: Bearer <student_token>
 Advanced search for forum questions.
 
 **Query Parameters:**
-- `q`: Search query (title, content)
+- `q`: Search query (title, message)
 - `student_id` (optional): Filter by student
 - `has_answers` (optional): Filter by whether question has answers (true/false)
 - `date_from` (optional): Filter by creation date from
@@ -268,15 +265,14 @@ Advanced search for forum questions.
     {
       "id": 1,
       "title": "How to implement React hooks?",
-      "content": "I'm having trouble understanding...",
+      "message": "I'm having trouble understanding...",
       "student": {
-        "user": {
-          "name": "John Doe"
-        }
+        "name": "John Doe"
       },
       "answers_count": 3,
       "relevance_score": 0.92,
-      "created_at": "2025-09-10T09:00:00Z"
+      "created_at": "2025-09-10T09:00:00Z",
+      "updated_at": "2025-09-12T14:30:00Z"
     }
   ],
   "search_metadata": {
@@ -315,15 +311,11 @@ Get most popular questions (by answer count and recent activity).
     {
       "id": 1,
       "title": "How to implement React hooks?",
-      "content": "I'm having trouble understanding...",
+      "message": "I'm having trouble understanding...",
       "student": {
-        "user": {
-          "name": "John Doe"
-        }
+        "name": "John Doe"
       },
       "answers_count": 15,
-      "views_count": 234,
-      "popularity_score": 0.95,
       "created_at": "2025-09-10T09:00:00Z"
     }
   ],
@@ -465,4 +457,4 @@ All error responses follow this format:
 
 ---
 
-*Last updated: 2025-09-13*
+*Last updated: 2025-09-16*

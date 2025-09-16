@@ -31,7 +31,6 @@ Get list of all available courses.
       "id": 1,
       "title": "Introduction to Programming",
       "description": "Learn basic programming concepts and fundamentals",
-      "duration": "4 weeks",
       "created_at": "2025-09-13T00:00:00Z",
       "updated_at": "2025-09-13T00:00:00Z"
     }
@@ -61,14 +60,13 @@ Get detailed information about a specific course.
   "id": 1,
   "title": "Introduction to Programming",
   "description": "Learn basic programming concepts and fundamentals",
-  "duration": "4 weeks",
   "materials_count": 12,
-  "enrolled_students": 25,
   "mentors": [
     {
       "id": 1,
       "name": "Jane Smith",
-      "expertise": "Programming and Mathematics"
+      "bio": "Experienced educator with 5 years in programming instruction",
+      "experience": "5 years"
     }
   ],
   "created_at": "2025-09-13T00:00:00Z",
@@ -95,8 +93,7 @@ Authorization: Bearer <admin_token>
 ```json
 {
   "title": "Advanced Web Development",
-  "description": "Learn modern web development frameworks and best practices",
-  "duration": "8 weeks"
+  "description": "Learn modern web development frameworks and best practices"
 }
 ```
 
@@ -108,8 +105,8 @@ Authorization: Bearer <admin_token>
     "id": 2,
     "title": "Advanced Web Development",
     "description": "Learn modern web development frameworks and best practices",
-    "duration": "8 weeks",
-    "created_at": "2025-09-13T00:00:00Z"
+    "created_at": "2025-09-13T00:00:00Z",
+    "updated_at": "2025-09-13T00:00:00Z"
   }
 }
 ```
@@ -133,8 +130,7 @@ Authorization: Bearer <admin_token>
 ```json
 {
   "title": "Updated Course Title",
-  "description": "Updated course description",
-  "duration": "6 weeks"
+  "description": "Updated course description"
 }
 ```
 
@@ -146,7 +142,6 @@ Authorization: Bearer <admin_token>
     "id": 1,
     "title": "Updated Course Title",
     "description": "Updated course description",
-    "duration": "6 weeks",
     "updated_at": "2025-09-13T01:00:00Z"
   }
 }
@@ -195,13 +190,10 @@ Authorization: Bearer <token>
   "mentors": [
     {
       "id": 1,
-      "user": {
-        "id": 1,
-        "name": "Jane Smith",
-        "email": "jane@example.com"
-      },
-      "expertise": "Programming and Mathematics",
+      "name": "Jane Smith",
+      "email": "jane@example.com",
       "bio": "Experienced educator with 5 years in programming instruction",
+      "experience": "5 years",
       "assigned_at": "2025-09-01T00:00:00Z"
     }
   ]
@@ -238,7 +230,8 @@ Authorization: Bearer <admin_token>
     "id": 1,
     "course_id": 1,
     "mentor_id": 1,
-    "assigned_at": "2025-09-13T00:00:00Z"
+    "created_at": "2025-09-13T00:00:00Z",
+    "updated_at": "2025-09-13T00:00:00Z"
   }
 }
 ```
@@ -290,14 +283,8 @@ Authorization: Bearer <admin_or_mentor_token>
   "students": [
     {
       "id": 1,
-      "user": {
-        "id": 1,
-        "name": "John Doe",
-        "email": "john@example.com"
-      },
-      "education_level": "SMA",
-      "enrolled_at": "2025-09-01T00:00:00Z",
-      "progress_percentage": 85
+      "name": "John Doe",
+      "email": "john@example.com"
     }
   ],
   "pagination": {
@@ -331,14 +318,8 @@ Authorization: Bearer <token>
     {
       "id": 1,
       "title": "Introduction to Variables",
-      "material_type": "text",
-      "created_at": "2025-09-13T00:00:00Z"
-    },
-    {
-      "id": 2,
-      "title": "Programming Basics Video",
-      "material_type": "video",
-      "created_at": "2025-09-13T00:00:00Z"
+      "created_at": "2025-09-13T00:00:00Z",
+      "updated_at": "2025-09-13T00:00:00Z"
     }
   ]
 }
@@ -393,4 +374,4 @@ All error responses follow this format:
 
 ---
 
-*Last updated: 2025-09-13*
+*Last updated: 2025-09-16*

@@ -25,7 +25,7 @@ Authorization: Bearer <student_token>
 
 **Query Parameters:**
 - `course_id` (optional): Filter by specific course
-- `status` (optional): Filter by completion status (completed, in_progress, not_started)
+- `completed` (optional): Filter by completion status (true/false)
 
 **Success Response:**
 ```json
@@ -35,16 +35,14 @@ Authorization: Bearer <student_token>
       "id": 1,
       "student_id": 1,
       "course_material_id": 1,
-      "course_material": {
+      "material": {
         "id": 1,
         "title": "Introduction to Variables",
-        "material_type": "text",
         "course": {
           "id": 1,
           "title": "Introduction to Programming"
         }
       },
-      "progress": 100,
       "completed": true,
       "updated_at": "2025-09-12T15:30:00Z"
     }
@@ -75,17 +73,14 @@ Authorization: Bearer <student_token>
     "title": "Introduction to Programming",
     "duration": "4 weeks"
   },
-  "overall_progress": 75,
   "materials_progress": [
     {
       "id": 1,
       "course_material_id": 1,
       "material": {
         "id": 1,
-        "title": "Introduction to Variables",
-        "material_type": "text"
+        "title": "Introduction to Variables"
       },
-      "progress": 100,
       "completed": true,
       "updated_at": "2025-09-12T15:30:00Z"
     },
@@ -94,10 +89,8 @@ Authorization: Bearer <student_token>
       "course_material_id": 2,
       "material": {
         "id": 2,
-        "title": "Programming Basics Video",
-        "material_type": "video"
+        "title": "Programming Basics Video"
       },
-      "progress": 50,
       "completed": false,
       "updated_at": "2025-09-13T10:00:00Z"
     }
@@ -105,8 +98,7 @@ Authorization: Bearer <student_token>
   "statistics": {
     "total_materials": 12,
     "completed_materials": 9,
-    "in_progress_materials": 2,
-    "not_started_materials": 1
+    "incomplete_materials": 3
   }
 }
 ```
@@ -129,7 +121,6 @@ Authorization: Bearer <student_token>
 **Request:**
 ```json
 {
-  "progress": 85,
   "completed": false
 }
 ```
@@ -142,7 +133,6 @@ Authorization: Bearer <student_token>
     "id": 1,
     "student_id": 1,
     "course_material_id": 1,
-    "progress": 85,
     "completed": false,
     "updated_at": "2025-09-13T11:00:00Z"
   }
@@ -168,7 +158,6 @@ Authorization: Bearer <student_token>
 ```json
 {
   "course_material_id": 3,
-  "progress": 25,
   "completed": false
 }
 ```
@@ -181,7 +170,6 @@ Authorization: Bearer <student_token>
     "id": 15,
     "student_id": 1,
     "course_material_id": 3,
-    "progress": 25,
     "completed": false,
     "updated_at": "2025-09-13T11:30:00Z"
   }
@@ -218,10 +206,7 @@ Authorization: Bearer <student_token>
       "title": "Introduction to Programming"
     }
   },
-  "progress": 100,
   "completed": true,
-  "started_at": "2025-09-10T09:00:00Z",
-  "completed_at": "2025-09-12T15:30:00Z",
   "updated_at": "2025-09-12T15:30:00Z"
 }
 ```
@@ -246,11 +231,8 @@ Authorization: Bearer <student_token>
 {
   "student": {
     "id": 1,
-    "user": {
-      "name": "John Doe",
-      "email": "john@example.com"
-    },
-    "education_level": "SMA"
+    "name": "John Doe",
+    "email": "john@example.com"
   },
   "overall_statistics": {
     "total_courses_enrolled": 3,
@@ -264,7 +246,6 @@ Authorization: Bearer <student_token>
     {
       "course_id": 1,
       "course_title": "Introduction to Programming",
-      "progress_percentage": 100,
       "completed": true,
       "materials_completed": 12,
       "total_materials": 12
@@ -272,7 +253,6 @@ Authorization: Bearer <student_token>
     {
       "course_id": 2,
       "course_title": "Web Development Basics",
-      "progress_percentage": 67,
       "completed": false,
       "materials_completed": 10,
       "total_materials": 15
@@ -294,11 +274,8 @@ Authorization: Bearer <admin_or_mentor_token>
 {
   "student": {
     "id": 1,
-    "user": {
-      "name": "John Doe",
-      "email": "john@example.com"
-    },
-    "education_level": "SMA"
+    "name": "John Doe",
+    "email": "john@example.com"
   },
   "courses_progress": [
     {
@@ -312,7 +289,6 @@ Authorization: Bearer <admin_or_mentor_token>
         {
           "material_id": 1,
           "material_title": "Introduction to Variables",
-          "progress": 100,
           "completed": true,
           "updated_at": "2025-09-12T15:30:00Z"
         }
@@ -351,21 +327,16 @@ Authorization: Bearer <admin_or_mentor_token>
   },
   "statistics": {
     "total_students": 25,
-    "average_progress": 78,
     "completed_students": 15,
-    "in_progress_students": 8,
-    "not_started_students": 2
+    "incomplete_students": 10
   },
   "students_progress": [
     {
       "student": {
         "id": 1,
-        "user": {
-          "name": "John Doe",
-          "email": "john@example.com"
-        }
+        "name": "John Doe",
+        "email": "john@example.com"
       },
-      "progress_percentage": 100,
       "completed": true,
       "last_activity": "2025-09-12T15:30:00Z"
     }
@@ -420,4 +391,4 @@ All error responses follow this format:
 
 ---
 
-*Last updated: 2025-09-13*
+*Last updated: 2025-09-16*

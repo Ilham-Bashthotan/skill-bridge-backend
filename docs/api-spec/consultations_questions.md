@@ -1,6 +1,6 @@
 # Consultations Questions API Specification
 
-This document describes the RESTful API endpoints for consultation question management in the platform.
+This document describes the RESTful API endpoints for consultation question management. Consultation questions are created by students (users with role=student).
 
 ---
 
@@ -25,11 +25,9 @@ Authorization: Bearer <token>
 
 **Query Parameters:**
 - `student_id` (optional): Filter by student (admin/mentor only)
-- `job_topic` (optional): Filter by job topic ID
-- `status` (optional): Filter by status (open, answered, closed)
 - `page` (optional): Page number (default: 1)
 - `limit` (optional): Items per page (default: 10)
-- `sort` (optional): Sort by (created_at, job_topic)
+- `sort` (optional): Sort by (created_at)
 - `order` (optional): Sort order (asc, desc)
 
 **Success Response:**
@@ -39,33 +37,16 @@ Authorization: Bearer <token>
     {
       "id": 1,
       "student_id": 1,
-      "job_topic": 1,
+      "title": "Frontend Developer Advice",
       "message": "I'm interested in applying for the Frontend Developer position. Could you provide guidance on what specific skills I should focus on?",
       "student": {
         "id": 1,
-        "user": {
-          "name": "John Doe",
-          "email": "john@example.com"
-        },
-        "education_level": "SMA"
-      },
-      "job": {
-        "id": 1,
-        "title": "Frontend Developer",
-        "company": "Tech Solutions Inc",
-        "location": "Jakarta"
+        "name": "John Doe",
+        "email": "john@example.com"
       },
       "answers_count": 2,
-      "status": "answered",
-      "latest_answer": {
-        "id": 3,
-        "created_at": "2025-09-12T14:30:00Z",
-        "user": {
-          "name": "Jane Smith",
-          "role": "mentor"
-        }
-      },
-      "created_at": "2025-09-10T09:00:00Z"
+      "created_at": "2025-09-10T09:00:00Z",
+      "updated_at": "2025-09-10T09:00:00Z"
     }
   ],
   "pagination": {
@@ -97,28 +78,17 @@ Authorization: Bearer <token>
 {
   "id": 1,
   "student_id": 1,
-  "job_topic": 1,
+  "title": "Frontend Developer Advice",
   "message": "I'm interested in applying for the Frontend Developer position. Could you provide guidance on what specific skills I should focus on? I have basic knowledge of HTML, CSS, and JavaScript but want to make sure I'm competitive.",
   "student": {
     "id": 1,
-    "user": {
-      "name": "John Doe",
-      "email": "john@example.com"
-    },
-    "education_level": "SMA"
-  },
-  "job": {
-    "id": 1,
-    "title": "Frontend Developer",
-    "description": "Join our team as a Frontend Developer...",
-    "company": "Tech Solutions Inc",
-    "requirements": "React, JavaScript, HTML, CSS",
-    "location": "Jakarta"
+    "name": "John Doe",
+    "email": "john@example.com"
   },
   "answers": [
     {
       "id": 1,
-      "user_id": 2,
+      "mentor_id": 2,
       "message": "Based on the job requirements, I recommend focusing on React framework...",
       "user": {
         "id": 2,
@@ -129,8 +99,8 @@ Authorization: Bearer <token>
     }
   ],
   "answers_count": 2,
-  "status": "answered",
-  "created_at": "2025-09-10T09:00:00Z"
+  "created_at": "2025-09-10T09:00:00Z",
+  "updated_at": "2025-09-12T14:30:00Z"
 }
 ```
 
@@ -152,7 +122,7 @@ Authorization: Bearer <student_token>
 **Request:**
 ```json
 {
-  "job_topic": 1,
+  "title": "Backend Developer Path",
   "message": "I'm very interested in the Backend Developer position at Innovation Labs. What programming languages and frameworks should I prioritize learning to be competitive for this role?"
 }
 ```
@@ -164,9 +134,10 @@ Authorization: Bearer <student_token>
   "question": {
     "id": 5,
     "student_id": 1,
-    "job_topic": 1,
+    "title": "Backend Developer Path",
     "message": "I'm very interested in the Backend Developer position...",
-    "created_at": "2025-09-13T01:30:00Z"
+    "created_at": "2025-09-13T01:30:00Z",
+    "updated_at": "2025-09-13T01:30:00Z"
   }
 }
 ```
@@ -189,6 +160,7 @@ Authorization: Bearer <student_token>
 **Request:**
 ```json
 {
+  "title": "Frontend vs Backend?",
   "message": "Updated question with more specific details about my background and career goals..."
 }
 ```
@@ -200,7 +172,7 @@ Authorization: Bearer <student_token>
   "question": {
     "id": 1,
     "student_id": 1,
-    "job_topic": 1,
+    "title": "Frontend vs Backend?",
     "message": "Updated question with more specific details...",
     "created_at": "2025-09-10T09:00:00Z",
     "updated_at": "2025-09-13T02:00:00Z"
@@ -246,8 +218,6 @@ Authorization: Bearer <student_token>
 ```
 
 **Query Parameters:**
-- `status` (optional): Filter by status (open, answered, closed)
-- `job_topic` (optional): Filter by job topic ID
 - `page` (optional): Page number (default: 1)
 - `limit` (optional): Items per page (default: 10)
 
@@ -257,22 +227,17 @@ Authorization: Bearer <student_token>
   "questions": [
     {
       "id": 1,
-      "job_topic": 1,
+      "title": "Frontend Developer Advice",
       "message": "I'm interested in applying for the Frontend Developer position...",
-      "job": {
-        "id": 1,
-        "title": "Frontend Developer",
-        "company": "Tech Solutions Inc"
-      },
       "answers_count": 2,
-      "status": "answered",
       "latest_answer": {
         "created_at": "2025-09-12T14:30:00Z",
         "user": {
           "name": "Jane Smith"
         }
       },
-      "created_at": "2025-09-10T09:00:00Z"
+      "created_at": "2025-09-10T09:00:00Z",
+      "updated_at": "2025-09-12T14:30:00Z"
     }
   ],
   "pagination": {
@@ -284,8 +249,7 @@ Authorization: Bearer <student_token>
 }
 ```
 
-### GET /consultations/questions/by-job/:jobId
-Get all consultation questions related to a specific job.
+// Job-based filters are not modeled. Endpoint removed.
 
 **Headers:**
 ```
@@ -347,7 +311,6 @@ Authorization: Bearer <mentor_or_admin_token>
 **Query Parameters:**
 - `page` (optional): Page number (default: 1)
 - `limit` (optional): Items per page (default: 10)
-- `job_topic` (optional): Filter by job topic ID
 
 **Success Response:**
 ```json
@@ -356,19 +319,12 @@ Authorization: Bearer <mentor_or_admin_token>
     {
       "id": 5,
       "student": {
-        "user": {
-          "name": "Alice Johnson"
-        },
-        "education_level": "Vokasi"
+        "id": 3,
+        "name": "Alice Johnson"
       },
-      "job": {
-        "id": 2,
-        "title": "Data Analyst",
-        "company": "Analytics Corp"
-      },
+      "title": "Data Analyst Skills",
       "message": "What skills are most important for a data analyst role?",
       "answers_count": 0,
-      "status": "open",
       "created_at": "2025-09-12T16:00:00Z"
     }
   ],
@@ -381,8 +337,7 @@ Authorization: Bearer <mentor_or_admin_token>
 }
 ```
 
-### PUT /consultations/questions/:questionId/status
-Update the status of a consultation question.
+// Status field is not modeled and is omitted.
 
 **Headers:**
 ```
@@ -427,33 +382,8 @@ Authorization: Bearer <admin_token>
 ```json
 {
   "total_questions": 75,
-  "open_questions": 12,
-  "answered_questions": 58,
-  "closed_questions": 5,
   "questions_this_month": 15,
-  "questions_this_year": 75,
-  "average_response_time_hours": 4.5,
-  "most_popular_jobs": [
-    {
-      "job_id": 1,
-      "job_title": "Frontend Developer",
-      "questions_count": 18
-    }
-  ],
-  "most_active_students": [
-    {
-      "student_id": 1,
-      "student_name": "John Doe",
-      "questions_count": 8
-    }
-  ],
-  "monthly_breakdown": [
-    {
-      "month": "2025-09",
-      "questions": 15,
-      "answers": 32
-    }
-  ]
+  "questions_this_year": 75
 }
 ```
 
@@ -476,4 +406,4 @@ All error responses follow this format:
 
 ---
 
-*Last updated: 2025-09-13*
+*Last updated: 2025-09-16*
