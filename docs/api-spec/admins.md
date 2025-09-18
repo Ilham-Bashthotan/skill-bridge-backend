@@ -110,7 +110,7 @@ Authorization: Bearer <admin_token>
 **Error Response:**
 ```json
 {
-  "error": "Invalid position"
+  "error": "Invalid input data"
 }
 ```
 
@@ -245,6 +245,51 @@ Authorization: Bearer <admin_token>
 }
 ```
 
+### POST /admins/users
+Create a new user with specified role (admin access only).
+
+**Headers:**
+```
+Authorization: Bearer <admin_token>
+```
+
+**Request:**
+```json
+{
+  "name": "Jane Smith",
+  "email": "jane.smith@example.com",
+  "phone": "08123456789",
+  "password": "tempPassword123",
+  "role": "mentor"
+}
+```
+
+**Success Response:**
+```json
+{
+  "message": "User created successfully",
+  "user": {
+    "id": 152,
+    "name": "Jane Smith",
+    "email": "jane.smith@example.com",
+    "phone": "08123456789",
+    "role": "mentor",
+    "bio": null,
+    "experience": null,
+    "email_verified": false,
+    "created_at": "2025-09-18T10:00:00Z",
+    "updated_at": "2025-09-18T10:00:00Z"
+  }
+}
+```
+
+**Error Response:**
+```json
+{
+  "error": "Email already exists"
+}
+```
+
 ### POST /admins/create-admin
 Create a new admin user (creates a user with role=admin).
 
@@ -273,7 +318,54 @@ Authorization: Bearer <admin_token>
     "email": "newadmin@example.com",
     "phone": "08987654321",
     "role": "admin",
-    "created_at": "2025-09-13T00:00:00Z"
+    "created_at": "2025-09-13T00:00:00Z",
+    "updated_at": "2025-09-13T00:00:00Z"
+  }
+}
+```
+
+**Error Response:**
+```json
+{
+  "error": "Email already exists"
+}
+```
+
+### POST /admins/create-mentor
+Create a new mentor user (creates a user with role=mentor).
+
+**Headers:**
+```
+Authorization: Bearer <admin_token>
+```
+
+**Request:**
+```json
+{
+  "name": "Jane Smith",
+  "email": "jane.mentor@example.com",
+  "phone": "08123456789",
+  "password": "mentorPassword123",
+  "bio": "Experienced React developer",
+  "experience": "5 years in frontend development"
+}
+```
+
+**Success Response:**
+```json
+{
+  "message": "Mentor created successfully",
+  "user": {
+    "id": 153,
+    "name": "Jane Smith",
+    "email": "jane.mentor@example.com",
+    "phone": "08123456789",
+    "role": "mentor",
+    "bio": "Experienced React developer",
+    "experience": "5 years in frontend development",
+    "email_verified": false,
+    "created_at": "2025-09-18T10:30:00Z",
+    "updated_at": "2025-09-18T10:30:00Z"
   }
 }
 ```
