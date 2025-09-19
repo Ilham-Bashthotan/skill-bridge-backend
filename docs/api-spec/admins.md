@@ -377,51 +377,6 @@ Authorization: Bearer <admin_token>
 }
 ```
 
-### GET /admins/system-logs
-Get system activity logs. (Optional feature; not represented in schema.)
-
-**Headers:**
-```
-Authorization: Bearer <admin_token>
-```
-
-**Query Parameters:**
-- `page` (optional): Page number (default: 1)
-- `limit` (optional): Items per page (default: 20)
-- `date_from` (optional): Start date filter
-- `date_to` (optional): End date filter
-
-**Success Response:**
-```json
-{
-  "logs": [
-    {
-      "id": 1,
-      "action": "user_created",
-      "user_id": 1,
-  "admin_id": 1,
-      "details": "Created new student account",
-      "timestamp": "2025-09-13T00:00:00Z"
-    }
-  ],
-  "pagination": {
-    "page": 1,
-    "limit": 20,
-    "total": 500,
-    "total_pages": 25
-  }
-}
-```
-
-**Error Response:**
-```json
-{
-  "error": "Invalid date format"
-}
-```
-
----
-
 ## Error Response (General)
 All error responses follow this format:
 ```json

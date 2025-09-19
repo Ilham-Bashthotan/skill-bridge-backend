@@ -41,6 +41,7 @@ Register a new user account. By default, new accounts are created with role "stu
     "bio": null,
     "experience": null,
     "email_verified": false,
+    "token": null,
     "created_at": "2025-09-13T00:00:00Z",
     "updated_at": "2025-09-13T00:00:00Z"
   }
@@ -76,7 +77,8 @@ Authenticate user and get access token.
     "role": "student",
     "bio": null,
     "experience": null,
-    "email_verified": false
+    "email_verified": false,
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   }
 }
 ```
@@ -107,6 +109,7 @@ Authorization: Bearer <token>
   "bio": null,
   "experience": null,
   "email_verified": false,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "created_at": "2025-09-13T00:00:00Z",
   "updated_at": "2025-09-13T00:00:00Z"
 }
@@ -150,6 +153,7 @@ Authorization: Bearer <token>
     "bio": "Aspiring frontend developer.",
     "experience": "1 year building React projects",
     "email_verified": false,
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
     "created_at": "2025-09-13T00:00:00Z",
     "updated_at": "2025-09-13T01:00:00Z"
   }
@@ -234,4 +238,4 @@ All error responses follow this format:
 
 ---
 
-*Last updated: 2025-09-16*
+*Last updated: 2025-09-19*
