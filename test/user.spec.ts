@@ -13,6 +13,7 @@ import {
   UpdateProfileResponse,
   TestErrorResponse,
 } from '../src/model/user-response.model';
+import { ErrorFilter } from '../src/common/error.filter';
 
 describe('UserController', () => {
   let app: INestApplication;
@@ -25,7 +26,7 @@ describe('UserController', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    // app.useGlobalFilters(new ErrorFilter()); // Uncomment when ErrorFilter is available
+    app.useGlobalFilters(new ErrorFilter());
 
     // Add validation pipe to test app
     app.useGlobalPipes(
