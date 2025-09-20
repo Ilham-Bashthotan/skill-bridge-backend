@@ -437,7 +437,7 @@ export class MentorService {
       throw new NotFoundException('Student not found');
     }
 
-    // Get courses where mentor is assigned and student has progress
+    // Get courses where mentor is assigned
     const mentorCourses = await this.prismaService.courseMentor.findMany({
       where: { mentorId },
       select: { courseId: true },
@@ -446,6 +446,24 @@ export class MentorService {
     const courseIds = mentorCourses.map((cm) => cm.courseId);
 
     if (courseIds.length === 0) {
+      throw new NotFoundException(
+        "Student not found or not in mentor's courses",
+      );
+    }
+
+    // Check if student has any progress in mentor's courses
+    const studentProgress = await this.prismaService.courseProgress.findFirst({
+      where: {
+        studentId,
+        courseMaterial: {
+          courseId: {
+            in: courseIds,
+          },
+        },
+      },
+    });
+
+    if (!studentProgress) {
       throw new NotFoundException(
         "Student not found or not in mentor's courses",
       );
@@ -460,6 +478,20 @@ export class MentorService {
         });
 
         if (!course) return null;
+
+        // Check if student has any progress in this specific course
+        const hasProgressInCourse =
+          await this.prismaService.courseProgress.findFirst({
+            where: {
+              studentId,
+              courseMaterial: {
+                courseId,
+              },
+            },
+          });
+
+        // Only include courses where student has progress
+        if (!hasProgressInCourse) return null;
 
         // Get total materials for this course
         const totalMaterials = await this.prismaService.courseMaterial.count({
@@ -501,12 +533,6 @@ export class MentorService {
     );
 
     const validCoursesProgress = coursesProgress.filter((cp) => cp !== null);
-
-    if (validCoursesProgress.length === 0) {
-      throw new NotFoundException(
-        "Student not found or not in mentor's courses",
-      );
-    }
 
     return {
       student,
