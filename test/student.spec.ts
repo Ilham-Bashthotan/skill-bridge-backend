@@ -63,7 +63,7 @@ describe('StudentService', () => {
     await app.close();
   });
 
-  describe('getDashboard', () => {
+  describe('GET /students/dashboard', () => {
     it('should return dashboard data for student with no activity', async () => {
       const result = await studentService.getDashboard(studentId);
 
@@ -98,7 +98,7 @@ describe('StudentService', () => {
     });
   });
 
-  describe('getProfile', () => {
+  describe('GET /students/profile', () => {
     it('should return student profile', async () => {
       const result = await studentService.getProfile(studentId);
 
@@ -120,7 +120,7 @@ describe('StudentService', () => {
     });
   });
 
-  describe('updateProfile', () => {
+  describe('PUT /students/profile', () => {
     it('should update student profile successfully', async () => {
       const updateData = {
         name: 'Updated Student',
@@ -167,7 +167,7 @@ describe('StudentService', () => {
     });
   });
 
-  describe('getCourses', () => {
+  describe('GET /students/courses', () => {
     it('should return courses with default pagination', async () => {
       const query = {};
       const result = await studentService.getCourses(studentId, query);
@@ -229,7 +229,7 @@ describe('StudentService', () => {
     });
   });
 
-  describe('getEnrolledCourses', () => {
+  describe('GET /students/courses/enrolled', () => {
     it('should return empty array when no courses enrolled', async () => {
       const result = await studentService.getEnrolledCourses(studentId);
 
@@ -255,7 +255,7 @@ describe('StudentService', () => {
     });
   });
 
-  describe('enrollInCourse', () => {
+  describe('POST /students/courses/:courseId/enroll', () => {
     it('should enroll student in course successfully', async () => {
       const result = await studentService.enrollInCourse(studentId, courseId);
 
@@ -295,7 +295,7 @@ describe('StudentService', () => {
     });
   });
 
-  describe('getCourseDetails', () => {
+  describe('GET /students/courses/:courseId', () => {
     it('should return course details for non-enrolled student', async () => {
       const result = await studentService.getCourseDetails(studentId, courseId);
 
@@ -332,7 +332,7 @@ describe('StudentService', () => {
     });
   });
 
-  describe('getCourseMaterials', () => {
+  describe('GET /students/courses/:courseId/materials', () => {
     it('should return materials for enrolled student', async () => {
       // Enroll student
       await testService.createCourseProgress(studentId, materialId);
@@ -368,7 +368,7 @@ describe('StudentService', () => {
     });
   });
 
-  describe('updateMaterialProgress', () => {
+  describe('PUT /students/courses/:courseId/materials/:materialId/progress', () => {
     beforeEach(async () => {
       // Enroll student in course
       await testService.createCourseProgress(studentId, materialId);
@@ -462,7 +462,7 @@ describe('StudentService', () => {
     });
   });
 
-  describe('getCertificates', () => {
+  describe('GET /students/certificates', () => {
     it('should return empty certificates for student with no certificates', async () => {
       const result = await studentService.getCertificates(studentId);
 
@@ -472,7 +472,7 @@ describe('StudentService', () => {
     });
   });
 
-  describe('getCertificateById', () => {
+  describe('GET /students/certificates', () => {
     it('should throw error for non-existent certificate', async () => {
       await expect(
         studentService.getCertificateById(studentId, 99999),
