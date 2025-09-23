@@ -69,7 +69,7 @@ describe('MentorService', () => {
     await app.close();
   });
 
-  describe('getDashboard', () => {
+  describe('GET /mentors/dashboard', () => {
     it('should get mentor dashboard', async () => {
       const result = await mentorService.getDashboard(mentorId);
 
@@ -95,7 +95,7 @@ describe('MentorService', () => {
     });
   });
 
-  describe('getProfile', () => {
+  describe('GET /mentors/profile', () => {
     it('should get mentor profile', async () => {
       const result = await mentorService.getProfile(mentorId);
 
@@ -121,7 +121,7 @@ describe('MentorService', () => {
     });
   });
 
-  describe('updateProfile', () => {
+  describe('PUT /mentors/rofile', () => {
     it('should update mentor profile', async () => {
       const updateData = {
         name: 'Updated Mentor Name',
@@ -154,7 +154,7 @@ describe('MentorService', () => {
     });
   });
 
-  describe('getAssignedCourses', () => {
+  describe('GET /mentors/courses/assigned', () => {
     it('should get assigned courses', async () => {
       const result = await mentorService.getAssignedCourses(mentorId);
 
@@ -180,7 +180,7 @@ describe('MentorService', () => {
     });
   });
 
-  describe('getCourseDetails', () => {
+  describe('GET /mentors/courses/:courseId', () => {
     it('should get course details', async () => {
       const result = await mentorService.getCourseDetails(mentorId, courseId);
 
@@ -208,7 +208,7 @@ describe('MentorService', () => {
     });
   });
 
-  describe('getCourseStudents', () => {
+  describe('GET /mentors/courses/:courseId/students', () => {
     it('should get course students', async () => {
       const result = await mentorService.getCourseStudents(mentorId, courseId);
 
@@ -232,7 +232,7 @@ describe('MentorService', () => {
     });
   });
 
-  describe('getCourseMaterials', () => {
+  describe('GET /mentors/courses/:courseId/materials', () => {
     it('should get course materials', async () => {
       const result = await mentorService.getCourseMaterials(mentorId, courseId);
 
@@ -256,7 +256,7 @@ describe('MentorService', () => {
     });
   });
 
-  describe('createCourseMaterial', () => {
+  describe('POST /mentors/courses/:courseId/materials', () => {
     it('should create course material', async () => {
       const materialData = {
         title: 'New Test Material',
@@ -292,7 +292,7 @@ describe('MentorService', () => {
     });
   });
 
-  describe('updateCourseMaterial', () => {
+  describe('PUT /mentors/courses/:courseId/materials/:materialId', () => {
     it('should update course material', async () => {
       const updateData = {
         title: 'Updated Test Material',
@@ -333,7 +333,7 @@ describe('MentorService', () => {
     });
   });
 
-  describe('deleteCourseMaterial', () => {
+  describe('DELETE /mentors/courses/:courseId/materials/:materialId', () => {
     it('should throw error when trying to delete material with student progress', async () => {
       await expect(
         mentorService.deleteCourseMaterial(mentorId, courseId, materialId),
@@ -362,7 +362,7 @@ describe('MentorService', () => {
     });
   });
 
-  describe('getStudentProgress', () => {
+  describe('GET /mentors/students/:studentId/progress', () => {
     it('should get student progress', async () => {
       const result = await mentorService.getStudentProgress(
         mentorId,
@@ -393,7 +393,7 @@ describe('MentorService', () => {
     });
   });
 
-  describe('updateStatus', () => {
+  describe('PUT /mentors/status', () => {
     it('should update mentor status', async () => {
       const statusData = {
         bio: 'Available for consultations',
