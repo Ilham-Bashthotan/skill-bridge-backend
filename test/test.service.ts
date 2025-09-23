@@ -122,24 +122,67 @@ export class TestService {
     });
   }
 
-  async cleanDatabase() {
-    // Clean all test data in correct order to avoid foreign key constraints
-    await this.prismaService.courseProgress.deleteMany({});
-    await this.prismaService.courseMaterial.deleteMany({});
-    await this.prismaService.courseMentor.deleteMany({});
-    await this.prismaService.course.deleteMany({});
-
-    // Clean up all test users including those with suffixes
-    await this.prismaService.user.deleteMany({
-      where: {
-        OR: [
-          { email: 'mentor@example.com' },
-          { email: 'test@example.com' },
-          { email: 'student@example.com' },
-          { email: { contains: 'mentor' } },
-          { email: { contains: 'student' } },
-        ],
+  async createCertificate(studentId: number, courseId: number) {
+    return this.prismaService.certificate.create({
+      data: {
+        studentId,
+        courseId,
+        certificateUrl: 'https://example.com/cert.pdf',
       },
     });
+  }
+
+  async createConsultationQuestion(studentId: number) {
+    return this.prismaService.consultationQuestion.create({
+      data: {
+        studentId,
+        title: 'Test Consultation',
+        message: 'Test consultation message',
+      },
+    });
+  }
+
+  async createForumQuestion(studentId: number) {
+    return this.prismaService.forumQuestion.create({
+      data: {
+        studentId,
+        title: 'Test Forum Question',
+        message: 'Test forum question message',
+      },
+    });
+  }
+
+  async cleanDatabase() {
+    try {
+      // Clean all test data in correct order to avoid foreign key constraints
+      await this.prismaService.consultationAnswer.deleteMany({});
+      await this.prismaService.consultationQuestion.deleteMany({});
+      await this.prismaService.forumAnswer.deleteMany({});
+      await this.prismaService.forumQuestion.deleteMany({});
+      await this.prismaService.certificate.deleteMany({});
+      await this.prismaService.courseProgress.deleteMany({});
+      await this.prismaService.courseMaterial.deleteMany({});
+      await this.prismaService.courseMentor.deleteMany({});
+      await this.prismaService.course.deleteMany({});
+
+      // Clean up all test users including those with suffixes
+      await this.prismaService.user.deleteMany({
+        where: {
+          OR: [
+            { email: 'mentor@example.com' },
+            { email: 'test@example.com' },
+            { email: 'student@example.com' },
+            { email: { contains: 'mentor' } },
+            { email: { contains: 'student' } },
+          ],
+        },
+      });
+    } catch (error) {
+      // If cleanup fails, log and continue
+      console.warn(
+        'Database cleanup failed:',
+        error instanceof Error ? error.message : String(error),
+      );
+    }
   }
 }

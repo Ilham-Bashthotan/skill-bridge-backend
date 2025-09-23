@@ -49,7 +49,7 @@ describe('UserController', () => {
 
   describe('POST /auth/register', () => {
     beforeEach(async () => {
-      await testService.deleteUser();
+      await testService.cleanDatabase();
     });
 
     it('should be rejected if request is invalid', async () => {
@@ -121,7 +121,7 @@ describe('UserController', () => {
 
   describe('POST /auth/login', () => {
     beforeEach(async () => {
-      await testService.deleteUser();
+      await testService.cleanDatabase();
       await testService.createUser();
     });
 
@@ -158,7 +158,7 @@ describe('UserController', () => {
     let userId: number;
 
     beforeEach(async () => {
-      await testService.deleteUser();
+      await testService.cleanDatabase();
       const user = await testService.createUser();
       userId = user.id;
     });
@@ -189,7 +189,7 @@ describe('UserController', () => {
     let userId: number;
 
     beforeEach(async () => {
-      await testService.deleteUser();
+      await testService.cleanDatabase();
       const user = await testService.createUser();
       userId = user.id;
     });
