@@ -1,0 +1,199 @@
+# Student API Testing Workflow
+# Complete testing scenarios for Student API
+
+@baseUrl = http://localhost:3001
+@authUrl = http://localhost:3001/auth
+
+### Step 1: Register a new student (if needed)
+POST {{authUrl}}/register
+Content-Type: application/json
+
+{
+  "name": "Test Student",
+  "email": "test.student@example.com",
+  "phone": "08123456789",
+  "password": "password123"
+}
+
+### Step 2: Login to get student token
+POST {{authUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "test.student@example.com",
+  "password": "password123"
+}
+
+### Store the token from login response here:
+@studentToken = Bearer PUT_YOUR_TOKEN_HERE
+
+### Step 3: Test Student Dashboard
+GET {{baseUrl}}/students/dashboard
+Authorization: {{studentToken}}
+
+### Step 4: Get Student Profile
+GET {{baseUrl}}/students/profile
+Authorization: {{studentToken}}
+
+### Step 5: Update Student Profile
+PUT {{baseUrl}}/students/profile
+Authorization: {{studentToken}}
+Content-Type: application/json
+
+{
+  "name": "Test Student Updated",
+  "phone": "08198765432",
+  "bio": "I am learning programming through Skill Bridge platform",
+  "experience": "Beginner level with basic HTML and CSS knowledge"
+}
+
+### Step 6: Browse Available Courses
+GET {{baseUrl}}/students/courses?page=1&limit=10
+Authorization: {{studentToken}}
+
+### Step 7: Search for Specific Courses
+GET {{baseUrl}}/students/courses?search=programming&page=1&limit=5
+Authorization: {{studentToken}}
+
+### Step 8: Check Currently Enrolled Courses
+GET {{baseUrl}}/students/courses/enrolled
+Authorization: {{studentToken}}
+
+### Step 9: Enroll in a Course (use actual course ID from step 6)
+# Replace '1' with an actual course ID from the courses list
+POST {{baseUrl}}/students/courses/1/enroll
+Authorization: {{studentToken}}
+
+### Step 10: Get Details of Enrolled Course
+GET {{baseUrl}}/students/courses/1
+Authorization: {{studentToken}}
+
+### Step 11: Get Course Materials
+GET {{baseUrl}}/students/courses/1/materials
+Authorization: {{studentToken}}
+
+### Step 12: Mark First Material as Completed
+# Replace courseId and materialId with actual values
+PUT {{baseUrl}}/students/courses/1/materials/1/progress
+Authorization: {{studentToken}}
+Content-Type: application/json
+
+{
+  "completed": true
+}
+
+### Step 13: Check Updated Course Progress
+GET {{baseUrl}}/students/courses/1
+Authorization: {{studentToken}}
+
+### Step 14: Mark Material as Not Completed (undo progress)
+PUT {{baseUrl}}/students/courses/1/materials/1/progress
+Authorization: {{studentToken}}
+Content-Type: application/json
+
+{
+  "completed": false
+}
+
+### Step 15: Check Certificates Earned
+GET {{baseUrl}}/students/certificates
+Authorization: {{studentToken}}
+
+### Step 16: Get Specific Certificate Details (if any exist)
+GET {{baseUrl}}/students/certificates/1
+Authorization: {{studentToken}}
+
+###
+### ERROR TESTING SCENARIOS
+###
+
+### Test: Enroll in Non-existent Course
+POST {{baseUrl}}/students/courses/99999/enroll
+Authorization: {{studentToken}}
+
+### Test: Get Non-existent Course Details
+GET {{baseUrl}}/students/courses/99999
+Authorization: {{studentToken}}
+
+### Test: Access Course Materials Without Enrollment
+# First, try to access materials for a course you're not enrolled in
+GET {{baseUrl}}/students/courses/2/materials
+Authorization: {{studentToken}}
+
+### Test: Update Progress for Non-existent Material
+PUT {{baseUrl}}/students/courses/1/materials/99999/progress
+Authorization: {{studentToken}}
+Content-Type: application/json
+
+{
+  "completed": true
+}
+
+### Test: Invalid Progress Data
+PUT {{baseUrl}}/students/courses/1/materials/1/progress
+Authorization: {{studentToken}}
+Content-Type: application/json
+
+{
+  "completed": "invalid_value"
+}
+
+### Test: No Authorization Header
+GET {{baseUrl}}/students/dashboard
+
+### Test: Invalid Authorization Token
+GET {{baseUrl}}/students/dashboard
+Authorization: Bearer invalid.jwt.token
+
+### Test: Enroll in Same Course Twice
+POST {{baseUrl}}/students/courses/1/enroll
+Authorization: {{studentToken}}
+
+### Test: Invalid Pagination Parameters
+GET {{baseUrl}}/students/courses?page=-1&limit=0
+Authorization: {{studentToken}}
+
+### Test: Get Non-existent Certificate
+GET {{baseUrl}}/students/certificates/99999
+Authorization: {{studentToken}}
+
+###
+### VALIDATION TESTING
+###
+
+### Test: Update Profile with Invalid Data
+PUT {{baseUrl}}/students/profile
+Authorization: {{studentToken}}
+Content-Type: application/json
+
+{
+  "name": "",
+  "phone": "invalid_phone",
+  "bio": null,
+  "experience": ""
+}
+
+### Test: Update Profile with Missing Fields
+PUT {{baseUrl}}/students/profile
+Authorization: {{studentToken}}
+Content-Type: application/json
+
+{
+  "name": "Valid Name Only"
+}
+
+###
+### PERFORMANCE TESTING
+###
+
+### Test: Large Page Size
+GET {{baseUrl}}/students/courses?page=1&limit=100
+Authorization: {{studentToken}}
+
+### Test: Search with Special Characters
+GET {{baseUrl}}/students/courses?search=%20@#$%^&*()
+Authorization: {{studentToken}}
+
+### Test: Search with Long Query
+GET {{baseUrl}}/students/courses?search=very_long_search_query_that_might_cause_issues_with_database_performance
+Authorization: {{studentToken}}

@@ -9,26 +9,30 @@ import {
   ParseIntPipe,
   HttpStatus,
   HttpCode,
-  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { UpdateStudentProfileDto } from './dto/update-student-profile.dto';
 import { GetCoursesQueryDto } from './dto/get-courses-query.dto';
 import { UpdateProgressDto } from './dto/update-progress.dto';
-
-interface RequestWithUser {
-  user: { id: number; role: string };
-}
+import { JwtAuthGuard } from '../common/jwt-auth.guard';
+import { RolesGuard } from '../common/roles.guard';
+import { Roles } from '../common/roles.decorator';
+import { Role } from '../common/roles.enum';
+import { Auth } from '../common/auth.decorator';
+import type { User } from '@prisma/client';
 
 @Controller('students')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.STUDENT)
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
   @Get('dashboard')
   @HttpCode(HttpStatus.OK)
-  async getDashboard(@Request() req: RequestWithUser) {
+  async getDashboard(@Auth() user: User) {
     try {
-      return await this.studentService.getDashboard(req.user.id);
+      return await this.studentService.getDashboard(user.id);
     } catch (error) {
       if (error instanceof Error) {
         return { error: error.message };
@@ -39,9 +43,9 @@ export class StudentController {
 
   @Get('profile')
   @HttpCode(HttpStatus.OK)
-  async getProfile(@Request() req: RequestWithUser) {
+  async getProfile(@Auth() user: User) {
     try {
-      return await this.studentService.getProfile(req.user.id);
+      return await this.studentService.getProfile(user.id);
     } catch (error) {
       if (error instanceof Error) {
         return { error: error.message };
@@ -53,11 +57,11 @@ export class StudentController {
   @Put('profile')
   @HttpCode(HttpStatus.OK)
   async updateProfile(
-    @Request() req: RequestWithUser,
+    @Auth() user: User,
     @Body() updateData: UpdateStudentProfileDto,
   ) {
     try {
-      return await this.studentService.updateProfile(req.user.id, updateData);
+      return await this.studentService.updateProfile(user.id, updateData);
     } catch (error) {
       if (error instanceof Error) {
         return { error: error.message };
@@ -68,12 +72,9 @@ export class StudentController {
 
   @Get('courses')
   @HttpCode(HttpStatus.OK)
-  async getCourses(
-    @Request() req: RequestWithUser,
-    @Query() query: GetCoursesQueryDto,
-  ) {
+  async getCourses(@Auth() user: User, @Query() query: GetCoursesQueryDto) {
     try {
-      return await this.studentService.getCourses(req.user.id, query);
+      return await this.studentService.getCourses(user.id, query);
     } catch (error) {
       if (error instanceof Error) {
         return { error: error.message };
@@ -84,9 +85,9 @@ export class StudentController {
 
   @Get('courses/enrolled')
   @HttpCode(HttpStatus.OK)
-  async getEnrolledCourses(@Request() req: RequestWithUser) {
+  async getEnrolledCourses(@Auth() user: User) {
     try {
-      return await this.studentService.getEnrolledCourses(req.user.id);
+      return await this.studentService.getEnrolledCourses(user.id);
     } catch (error) {
       if (error instanceof Error) {
         return { error: error.message };
@@ -98,11 +99,11 @@ export class StudentController {
   @Post('courses/:courseId/enroll')
   @HttpCode(HttpStatus.OK)
   async enrollInCourse(
-    @Request() req: RequestWithUser,
+    @Auth() user: User,
     @Param('courseId', ParseIntPipe) courseId: number,
   ) {
     try {
-      return await this.studentService.enrollInCourse(req.user.id, courseId);
+      return await this.studentService.enrollInCourse(user.id, courseId);
     } catch (error) {
       if (error instanceof Error) {
         return { error: error.message };
@@ -114,11 +115,11 @@ export class StudentController {
   @Get('courses/:courseId')
   @HttpCode(HttpStatus.OK)
   async getCourseDetails(
-    @Request() req: RequestWithUser,
+    @Auth() user: User,
     @Param('courseId', ParseIntPipe) courseId: number,
   ) {
     try {
-      return await this.studentService.getCourseDetails(req.user.id, courseId);
+      return await this.studentService.getCourseDetails(user.id, courseId);
     } catch (error) {
       if (error instanceof Error) {
         return { error: error.message };
@@ -130,14 +131,11 @@ export class StudentController {
   @Get('courses/:courseId/materials')
   @HttpCode(HttpStatus.OK)
   async getCourseMaterials(
-    @Request() req: RequestWithUser,
+    @Auth() user: User,
     @Param('courseId', ParseIntPipe) courseId: number,
   ) {
     try {
-      return await this.studentService.getCourseMaterials(
-        req.user.id,
-        courseId,
-      );
+      return await this.studentService.getCourseMaterials(user.id, courseId);
     } catch (error) {
       if (error instanceof Error) {
         return { error: error.message };
@@ -149,14 +147,14 @@ export class StudentController {
   @Put('courses/:courseId/materials/:materialId/progress')
   @HttpCode(HttpStatus.OK)
   async updateMaterialProgress(
-    @Request() req: RequestWithUser,
+    @Auth() user: User,
     @Param('courseId', ParseIntPipe) courseId: number,
     @Param('materialId', ParseIntPipe) materialId: number,
     @Body() updateData: UpdateProgressDto,
   ) {
     try {
       return await this.studentService.updateMaterialProgress(
-        req.user.id,
+        user.id,
         courseId,
         materialId,
         updateData,
@@ -171,9 +169,9 @@ export class StudentController {
 
   @Get('certificates')
   @HttpCode(HttpStatus.OK)
-  async getCertificates(@Request() req: RequestWithUser) {
+  async getCertificates(@Auth() user: User) {
     try {
-      return await this.studentService.getCertificates(req.user.id);
+      return await this.studentService.getCertificates(user.id);
     } catch (error) {
       if (error instanceof Error) {
         return { error: error.message };
@@ -185,12 +183,12 @@ export class StudentController {
   @Get('certificates/:certificateId')
   @HttpCode(HttpStatus.OK)
   async getCertificateById(
-    @Request() req: RequestWithUser,
+    @Auth() user: User,
     @Param('certificateId', ParseIntPipe) certificateId: number,
   ) {
     try {
       return await this.studentService.getCertificateById(
-        req.user.id,
+        user.id,
         certificateId,
       );
     } catch (error) {

@@ -1,0 +1,126 @@
+# Student API Manual Testing
+# Use with REST Client extension in VS Code or similar HTTP client
+
+# Base URL
+@baseUrl = http://localhost:3000
+@studentToken = Bearer your_student_token_here
+
+### Variables (Update these with actual values)
+# @studentToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+# @courseId = 1
+# @materialId = 1
+# @certificateId = 1
+
+###
+# Student Dashboard
+GET {{baseUrl}}/students/dashboard
+Authorization: {{studentToken}}
+
+###
+# Get Student Profile
+GET {{baseUrl}}/students/profile
+Authorization: {{studentToken}}
+
+###
+# Update Student Profile
+PUT {{baseUrl}}/students/profile
+Authorization: {{studentToken}}
+Content-Type: application/json
+
+{
+  "name": "John Doe Updated",
+  "phone": "08123456789",
+  "bio": "Aspiring full-stack developer",
+  "experience": "2 years of learning programming"
+}
+
+###
+# Get All Courses (with pagination)
+GET {{baseUrl}}/students/courses?page=1&limit=10
+Authorization: {{studentToken}}
+
+###
+# Get All Courses (with search)
+GET {{baseUrl}}/students/courses?search=programming&page=1&limit=5
+Authorization: {{studentToken}}
+
+###
+# Get Enrolled Courses
+GET {{baseUrl}}/students/courses/enrolled
+Authorization: {{studentToken}}
+
+###
+# Enroll in Course (replace 1 with actual courseId)
+POST {{baseUrl}}/students/courses/1/enroll
+Authorization: {{studentToken}}
+
+###
+# Get Course Details (replace 1 with actual courseId)
+GET {{baseUrl}}/students/courses/1
+Authorization: {{studentToken}}
+
+###
+# Get Course Materials (replace 1 with actual courseId)
+GET {{baseUrl}}/students/courses/1/materials
+Authorization: {{studentToken}}
+
+###
+# Update Material Progress - Mark as Completed (replace courseId and materialId)
+PUT {{baseUrl}}/students/courses/1/materials/1/progress
+Authorization: {{studentToken}}
+Content-Type: application/json
+
+{
+  "completed": true
+}
+
+###
+# Update Material Progress - Mark as Not Completed (replace courseId and materialId)
+PUT {{baseUrl}}/students/courses/1/materials/1/progress
+Authorization: {{studentToken}}
+Content-Type: application/json
+
+{
+  "completed": false
+}
+
+###
+# Get All Certificates
+GET {{baseUrl}}/students/certificates
+Authorization: {{studentToken}}
+
+###
+# Get Specific Certificate (replace 1 with actual certificateId)
+GET {{baseUrl}}/students/certificates/1
+Authorization: {{studentToken}}
+
+###
+# Test Error Cases
+
+### Test with invalid course ID
+GET {{baseUrl}}/students/courses/99999
+Authorization: {{studentToken}}
+
+### Test enroll in non-existent course
+POST {{baseUrl}}/students/courses/99999/enroll
+Authorization: {{studentToken}}
+
+### Test get materials for non-existent course
+GET {{baseUrl}}/students/courses/99999/materials
+Authorization: {{studentToken}}
+
+### Test update progress with invalid data
+PUT {{baseUrl}}/students/courses/1/materials/1/progress
+Authorization: {{studentToken}}
+Content-Type: application/json
+
+{
+  "completed": "invalid_boolean"
+}
+
+### Test without authorization header
+GET {{baseUrl}}/students/dashboard
+
+### Test with invalid token
+GET {{baseUrl}}/students/dashboard
+Authorization: Bearer invalid_token_here
