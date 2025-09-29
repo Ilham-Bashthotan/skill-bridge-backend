@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../common/prisma.service';
 import { Role } from '@prisma/client';
-import { CreateUserDto } from './dto/create-user.dto';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { CreateMentorDto } from './dto/create-mentor.dto';
 import { UpdateAdminProfileDto } from './dto/update-admin-profile.dto';
@@ -160,48 +159,6 @@ export class AdminService {
         limit,
         total,
         total_pages: totalPages,
-      },
-    };
-  }
-
-  async createUser(dto: CreateUserDto): Promise<CreateUserResponse> {
-    // Check if email already exists
-    const existingUser = await this.prisma.user.findUnique({
-      where: { email: dto.email },
-    });
-
-    if (existingUser) {
-      throw new ConflictException('Email already exists');
-    }
-
-    // Hash password
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(dto.password, saltRounds);
-
-    const user = await this.prisma.user.create({
-      data: {
-        name: dto.name,
-        email: dto.email,
-        password: hashedPassword,
-        phone: dto.phone,
-        role: dto.role,
-        emailVerified: dto.role !== Role.student, // Only students need email verification
-      },
-    });
-
-    return {
-      message: 'User created successfully',
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        phone: user.phone ?? undefined,
-        role: user.role,
-        bio: user.bio ?? undefined,
-        experience: user.experience ?? undefined,
-        email_verified: user.emailVerified,
-        created_at: user.createdAt,
-        updated_at: user.updatedAt,
       },
     };
   }

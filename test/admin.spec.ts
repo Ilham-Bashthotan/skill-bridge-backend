@@ -1,13 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { AdminService } from '../src/admin/admin.service';
 import { PrismaService } from '../src/common/prisma.service';
 import { Role } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
-
-jest.mock('bcrypt', () => ({
-  hash: jest.fn(),
-}));
 
 describe('AdminService', () => {
   let service: AdminService;
@@ -48,7 +43,7 @@ describe('AdminService', () => {
     jest.clearAllMocks();
   });
 
-  describe('getDashboard', () => {
+  describe('GET /admins/dashboard', () => {
     it('should return dashboard statistics', async () => {
       mockPrismaService.user.count
         .mockResolvedValueOnce(100)
@@ -74,7 +69,7 @@ describe('AdminService', () => {
     });
   });
 
-  describe('getProfile', () => {
+  describe('GET /admins/profile', () => {
     it('should return admin profile', async () => {
       const mockAdmin = {
         id: 1,
@@ -105,57 +100,7 @@ describe('AdminService', () => {
     });
   });
 
-  describe('createUser', () => {
-    it('should create a new user successfully', async () => {
-      const createUserDto = {
-        name: 'New User',
-        email: 'newuser@example.com',
-        password: 'password123',
-        phone: '+1234567890',
-        role: Role.student,
-      };
-
-      const createdUser = {
-        id: 1,
-        name: 'New User',
-        email: 'newuser@example.com',
-        password: 'hashedPassword',
-        phone: '+1234567890',
-        role: Role.student,
-        bio: null,
-        experience: null,
-        emailVerified: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-
-      mockPrismaService.user.findUnique.mockResolvedValue(null);
-      (bcrypt.hash as jest.Mock).mockResolvedValue('hashedPassword');
-      mockPrismaService.user.create.mockResolvedValue(createdUser);
-
-      const result = await service.createUser(createUserDto);
-
-      expect(result.message).toBe('User created successfully');
-      expect(result.user.id).toBe(1);
-    });
-
-    it('should throw ConflictException when email already exists', async () => {
-      const createUserDto = {
-        name: 'New User',
-        email: 'existing@example.com',
-        password: 'password123',
-        role: Role.student,
-      };
-
-      mockPrismaService.user.findUnique.mockResolvedValue({ id: 1 });
-
-      await expect(service.createUser(createUserDto)).rejects.toThrow(
-        ConflictException,
-      );
-    });
-  });
-
-  describe('updateUserRole', () => {
+  describe('PUT /admins/profile', () => {
     it('should update user role successfully', async () => {
       const existingUser = {
         id: 1,
@@ -187,7 +132,7 @@ describe('AdminService', () => {
     });
   });
 
-  describe('deleteUser', () => {
+  describe('DELETE /admins/users/:userId', () => {
     it('should delete user successfully', async () => {
       const existingUser = {
         id: 1,

@@ -17,7 +17,6 @@ import { JwtAuthGuard } from '../common/jwt-auth.guard';
 import { RolesGuard } from '../common/roles.guard';
 import { Roles } from '../common/roles.decorator';
 import { User } from '../common/user.decorator';
-import { CreateUserDto } from './dto/create-user.dto';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { CreateMentorDto } from './dto/create-mentor.dto';
 import { UpdateAdminProfileDto } from './dto/update-admin-profile.dto';
@@ -79,16 +78,6 @@ export class AdminController {
       statusCode: HttpStatus.OK,
       message: 'Users retrieved successfully',
       data,
-    };
-  }
-
-  @Post('users')
-  @HttpCode(HttpStatus.CREATED)
-  async createUser(@Body() dto: CreateUserDto) {
-    const data = await this.adminService.createUser(dto);
-    return {
-      statusCode: HttpStatus.CREATED,
-      ...data,
     };
   }
 
