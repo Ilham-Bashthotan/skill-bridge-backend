@@ -189,40 +189,6 @@ Authorization: Bearer <admin_token>
 }
 ```
 
-### PUT /admins/users/:userId/role
-Update user's role (admin only).
-
-**Headers:**
-```
-Authorization: Bearer <admin_token>
-```
-
-**Request:**
-```json
-{
-  "role": "mentor"
-}
-```
-
-**Success Response:**
-```json
-{
-  "message": "User role updated successfully",
-  "user": {
-    "id": 1,
-    "role": "mentor",
-    "updated_at": "2025-09-13T00:10:00Z"
-  }
-}
-```
-
-**Error Response:**
-```json
-{
-  "error": "User not found"
-}
-```
-
 ### DELETE /admins/users/:userId
 Delete a user account.
 
@@ -242,51 +208,6 @@ Authorization: Bearer <admin_token>
 ```json
 {
   "error": "Cannot delete user with active courses"
-}
-```
-
-### POST /admins/users
-Create a new user with specified role (admin access only).
-
-**Headers:**
-```
-Authorization: Bearer <admin_token>
-```
-
-**Request:**
-```json
-{
-  "name": "Jane Smith",
-  "email": "jane.smith@example.com",
-  "phone": "08123456789",
-  "password": "tempPassword123",
-  "role": "mentor"
-}
-```
-
-**Success Response:**
-```json
-{
-  "message": "User created successfully",
-  "user": {
-    "id": 152,
-    "name": "Jane Smith",
-    "email": "jane.smith@example.com",
-    "phone": "08123456789",
-    "role": "mentor",
-    "bio": null,
-    "experience": null,
-    "email_verified": false,
-    "created_at": "2025-09-18T10:00:00Z",
-    "updated_at": "2025-09-18T10:00:00Z"
-  }
-}
-```
-
-**Error Response:**
-```json
-{
-  "error": "Email already exists"
 }
 ```
 
@@ -387,4 +308,4 @@ All error responses follow this format:
 
 ---
 
-*Last updated: 2025-09-16*
+*Last updated: 2025-09-30*

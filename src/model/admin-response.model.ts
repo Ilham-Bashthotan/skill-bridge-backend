@@ -70,15 +70,6 @@ export interface CreateUserResponse {
   };
 }
 
-export interface UpdateUserRoleResponse {
-  message: string;
-  user: {
-    id: number;
-    role: string;
-    updated_at: Date;
-  };
-}
-
 export interface DeleteUserResponse {
   message: string;
 }

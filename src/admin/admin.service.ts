@@ -9,7 +9,6 @@ import { Role } from '@prisma/client';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { CreateMentorDto } from './dto/create-mentor.dto';
 import { UpdateAdminProfileDto } from './dto/update-admin-profile.dto';
-import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import {
   AdminDashboardResponse,
@@ -17,7 +16,6 @@ import {
   UpdateAdminProfileResponse,
   UserListResponse,
   CreateUserResponse,
-  UpdateUserRoleResponse,
   DeleteUserResponse,
 } from '../model/admin-response.model';
 import * as bcrypt from 'bcrypt';
@@ -163,6 +161,29 @@ export class AdminService {
     };
   }
 
+  async getUserById(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone ?? undefined,
+      role: user.role,
+      bio: user.bio ?? undefined,
+      experience: user.experience ?? undefined,
+      email_verified: user.emailVerified,
+      created_at: user.createdAt,
+      updated_at: user.updatedAt,
+    };
+  }
+
   async createAdmin(dto: CreateAdminDto): Promise<CreateUserResponse> {
     // Check if email already exists
     const existingUser = await this.prisma.user.findUnique({
@@ -247,48 +268,6 @@ export class AdminService {
         email_verified: mentor.emailVerified,
         created_at: mentor.createdAt,
         updated_at: mentor.updatedAt,
-      },
-    };
-  }
-
-  async updateUserRole(
-    userId: number,
-    dto: UpdateUserRoleDto,
-  ): Promise<UpdateUserRoleResponse> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    // Prevent changing role of the last admin
-    if (user.role === Role.admin && dto.role !== Role.admin) {
-      const adminCount = await this.prisma.user.count({
-        where: { role: Role.admin },
-      });
-
-      if (adminCount <= 1) {
-        throw new BadRequestException('Cannot change role of the last admin');
-      }
-    }
-
-    const updatedUser = await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        role: dto.role,
-        // Update email verification based on new role
-        emailVerified: dto.role !== Role.student ? true : user.emailVerified,
-      },
-    });
-
-    return {
-      message: 'User role updated successfully',
-      user: {
-        id: updatedUser.id,
-        role: updatedUser.role,
-        updated_at: updatedUser.updatedAt,
       },
     };
   }

@@ -20,7 +20,6 @@ import { User } from '../common/user.decorator';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { CreateMentorDto } from './dto/create-mentor.dto';
 import { UpdateAdminProfileDto } from './dto/update-admin-profile.dto';
-import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 
 interface UserPayload {
@@ -81,7 +80,26 @@ export class AdminController {
     };
   }
 
-  @Post('admins')
+  @Get('users/:id')
+  @HttpCode(HttpStatus.OK)
+  async getUserById(@Param('id') id: string) {
+    const userId = parseInt(id, 10);
+    if (isNaN(userId)) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'Invalid user ID',
+      };
+    }
+
+    const data = await this.adminService.getUserById(userId);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'User retrieved successfully',
+      data,
+    };
+  }
+
+  @Post('create-admin')
   @HttpCode(HttpStatus.CREATED)
   async createAdmin(@Body() dto: CreateAdminDto) {
     const data = await this.adminService.createAdmin(dto);
@@ -91,33 +109,12 @@ export class AdminController {
     };
   }
 
-  @Post('mentors')
+  @Post('create-mentor')
   @HttpCode(HttpStatus.CREATED)
   async createMentor(@Body() dto: CreateMentorDto) {
     const data = await this.adminService.createMentor(dto);
     return {
       statusCode: HttpStatus.CREATED,
-      ...data,
-    };
-  }
-
-  @Put('users/:id/role')
-  @HttpCode(HttpStatus.OK)
-  async updateUserRole(
-    @Param('id') id: string,
-    @Body() dto: UpdateUserRoleDto,
-  ) {
-    const userId = parseInt(id, 10);
-    if (isNaN(userId)) {
-      return {
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: 'Invalid user ID',
-      };
-    }
-
-    const data = await this.adminService.updateUserRole(userId, dto);
-    return {
-      statusCode: HttpStatus.OK,
       ...data,
     };
   }
