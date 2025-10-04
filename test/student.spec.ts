@@ -98,74 +98,74 @@ describe('StudentService', () => {
     });
   });
 
-  describe('GET /students/profile', () => {
-    it('should return student profile', async () => {
-      const result = await studentService.getProfile(studentId);
+  // describe('GET /students/profile', () => {
+  //   it('should return student profile', async () => {
+  //     const result = await studentService.getProfile(studentId);
 
-      expect(result).toMatchObject({
-        id: studentId,
-        name: 'Test Student',
-        email: 'student-test@example.com',
-        role: 'student',
-        email_verified: false,
-      });
-      expect(result).toHaveProperty('created_at');
-      expect(result).toHaveProperty('updated_at');
-    });
+  //     expect(result).toMatchObject({
+  //       id: studentId,
+  //       name: 'Test Student',
+  //       email: 'student-test@example.com',
+  //       role: 'student',
+  //       email_verified: false,
+  //     });
+  //     expect(result).toHaveProperty('created_at');
+  //     expect(result).toHaveProperty('updated_at');
+  //   });
 
-    it('should throw error for non-existent student', async () => {
-      await expect(studentService.getProfile(99999)).rejects.toThrow(
-        'Student profile not found',
-      );
-    });
-  });
+  //   it('should throw error for non-existent student', async () => {
+  //     await expect(studentService.getProfile(99999)).rejects.toThrow(
+  //       'Student profile not found',
+  //     );
+  //   });
+  // });
 
-  describe('PUT /students/profile', () => {
-    it('should update student profile successfully', async () => {
-      const updateData = {
-        name: 'Updated Student',
-        phone: '08123456789',
-        bio: 'Updated bio',
-        experience: 'Updated experience',
-      };
+  // describe('PUT /students/profile', () => {
+  //   it('should update student profile successfully', async () => {
+  //     const updateData = {
+  //       name: 'Updated Student',
+  //       phone: '08123456789',
+  //       bio: 'Updated bio',
+  //       experience: 'Updated experience',
+  //     };
 
-      const result = await studentService.updateProfile(studentId, updateData);
+  //     const result = await studentService.updateProfile(studentId, updateData);
 
-      expect(result).toMatchObject({
-        message: 'Student profile updated successfully',
-        user: {
-          id: studentId,
-          bio: 'Updated bio',
-          experience: 'Updated experience',
-        },
-      });
-      expect(result.user).toHaveProperty('updatedAt');
-    });
+  //     expect(result).toMatchObject({
+  //       message: 'Student profile updated successfully',
+  //       user: {
+  //         id: studentId,
+  //         bio: 'Updated bio',
+  //         experience: 'Updated experience',
+  //       },
+  //     });
+  //     expect(result.user).toHaveProperty('updatedAt');
+  //   });
 
-    it('should update student profile with partial data', async () => {
-      const updateData = {
-        bio: 'Only bio updated',
-      };
+  //   it('should update student profile with partial data', async () => {
+  //     const updateData = {
+  //       bio: 'Only bio updated',
+  //     };
 
-      const result = await studentService.updateProfile(studentId, updateData);
+  //     const result = await studentService.updateProfile(studentId, updateData);
 
-      expect(result).toMatchObject({
-        message: 'Student profile updated successfully',
-        user: {
-          id: studentId,
-          bio: 'Only bio updated',
-        },
-      });
-    });
+  //     expect(result).toMatchObject({
+  //       message: 'Student profile updated successfully',
+  //       user: {
+  //         id: studentId,
+  //         bio: 'Only bio updated',
+  //       },
+  //     });
+  //   });
 
-    it('should throw error for non-existent student', async () => {
-      const updateData = { bio: 'Test bio' };
+  //   it('should throw error for non-existent student', async () => {
+  //     const updateData = { bio: 'Test bio' };
 
-      await expect(
-        studentService.updateProfile(99999, updateData),
-      ).rejects.toThrow('Student profile not found');
-    });
-  });
+  //     await expect(
+  //       studentService.updateProfile(99999, updateData),
+  //     ).rejects.toThrow('Student profile not found');
+  //   });
+  // });
 
   describe('GET /students/courses', () => {
     it('should return courses with default pagination', async () => {

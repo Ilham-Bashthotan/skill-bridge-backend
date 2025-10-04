@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../common/prisma.service';
-import { UpdateStudentProfileDto } from './dto/update-student-profile.dto';
+// import { UpdateStudentProfileDto } from './dto/update-student-profile.dto';
 import { GetCoursesQueryDto } from './dto/get-courses-query.dto';
 import { UpdateProgressDto } from './dto/update-progress.dto';
 
@@ -88,70 +88,70 @@ export class StudentService {
     };
   }
 
-  async getProfile(studentId: number) {
-    const student = await this.prismaService.user.findUnique({
-      where: { id: studentId, role: 'student' },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        role: true,
-        bio: true,
-        experience: true,
-        emailVerified: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+  // async getProfile(studentId: number) {
+  //   const student = await this.prismaService.user.findUnique({
+  //     where: { id: studentId, role: 'student' },
+  //     select: {
+  //       id: true,
+  //       name: true,
+  //       email: true,
+  //       phone: true,
+  //       role: true,
+  //       bio: true,
+  //       experience: true,
+  //       emailVerified: true,
+  //       createdAt: true,
+  //       updatedAt: true,
+  //     },
+  //   });
 
-    if (!student) {
-      throw new NotFoundException('Student profile not found');
-    }
+  //   if (!student) {
+  //     throw new NotFoundException('Student profile not found');
+  //   }
 
-    return {
-      id: student.id,
-      name: student.name,
-      email: student.email,
-      phone: student.phone,
-      role: student.role,
-      bio: student.bio,
-      experience: student.experience,
-      email_verified: student.emailVerified,
-      created_at: student.createdAt,
-      updated_at: student.updatedAt,
-    };
-  }
+  //   return {
+  //     id: student.id,
+  //     name: student.name,
+  //     email: student.email,
+  //     phone: student.phone,
+  //     role: student.role,
+  //     bio: student.bio,
+  //     experience: student.experience,
+  //     email_verified: student.emailVerified,
+  //     created_at: student.createdAt,
+  //     updated_at: student.updatedAt,
+  //   };
+  // }
 
-  async updateProfile(studentId: number, updateData: UpdateStudentProfileDto) {
-    // Verify student exists
-    const student = await this.prismaService.user.findUnique({
-      where: { id: studentId, role: 'student' },
-    });
+  // async updateProfile(studentId: number, updateData: UpdateStudentProfileDto) {
+  //   // Verify student exists
+  //   const student = await this.prismaService.user.findUnique({
+  //     where: { id: studentId, role: 'student' },
+  //   });
 
-    if (!student) {
-      throw new NotFoundException('Student profile not found');
-    }
+  //   if (!student) {
+  //     throw new NotFoundException('Student profile not found');
+  //   }
 
-    const updatedStudent = await this.prismaService.user.update({
-      where: { id: studentId },
-      data: {
-        ...updateData,
-        updatedAt: new Date(),
-      },
-      select: {
-        id: true,
-        bio: true,
-        experience: true,
-        updatedAt: true,
-      },
-    });
+  //   const updatedStudent = await this.prismaService.user.update({
+  //     where: { id: studentId },
+  //     data: {
+  //       ...updateData,
+  //       updatedAt: new Date(),
+  //     },
+  //     select: {
+  //       id: true,
+  //       bio: true,
+  //       experience: true,
+  //       updatedAt: true,
+  //     },
+  //   });
 
-    return {
-      message: 'Student profile updated successfully',
-      user: updatedStudent,
-    };
-  }
+  //   return {
+  //     message: 'Student profile updated successfully',
+  //     user: updatedStudent,
+  //   };
+  // }
 
   async getCourses(studentId: number, query: GetCoursesQueryDto) {
     const { page = 1, limit = 10, search } = query;

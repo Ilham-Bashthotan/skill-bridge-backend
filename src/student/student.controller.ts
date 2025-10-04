@@ -12,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { StudentService } from './student.service';
-import { UpdateStudentProfileDto } from './dto/update-student-profile.dto';
+// import { UpdateStudentProfileDto } from './dto/update-student-profile.dto';
 import { GetCoursesQueryDto } from './dto/get-courses-query.dto';
 import { UpdateProgressDto } from './dto/update-progress.dto';
 import { JwtAuthGuard } from '../common/jwt-auth.guard';
@@ -41,34 +41,34 @@ export class StudentController {
     }
   }
 
-  @Get('profile')
-  @HttpCode(HttpStatus.OK)
-  async getProfile(@Auth() user: User) {
-    try {
-      return await this.studentService.getProfile(user.id);
-    } catch (error) {
-      if (error instanceof Error) {
-        return { error: error.message };
-      }
-      return { error: 'An unexpected error occurred' };
-    }
-  }
+  // @Get('profile')
+  // @HttpCode(HttpStatus.OK)
+  // async getProfile(@Auth() user: User) {
+  //   try {
+  //     return await this.studentService.getProfile(user.id);
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       return { error: error.message };
+  //     }
+  //     return { error: 'An unexpected error occurred' };
+  //   }
+  // }
 
-  @Put('profile')
-  @HttpCode(HttpStatus.OK)
-  async updateProfile(
-    @Auth() user: User,
-    @Body() updateData: UpdateStudentProfileDto,
-  ) {
-    try {
-      return await this.studentService.updateProfile(user.id, updateData);
-    } catch (error) {
-      if (error instanceof Error) {
-        return { error: error.message };
-      }
-      return { error: 'An unexpected error occurred' };
-    }
-  }
+  // @Put('profile')
+  // @HttpCode(HttpStatus.OK)
+  // async updateProfile(
+  //   @Auth() user: User,
+  //   @Body() updateData: UpdateStudentProfileDto,
+  // ) {
+  //   try {
+  //     return await this.studentService.updateProfile(user.id, updateData);
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       return { error: error.message };
+  //     }
+  //     return { error: 'An unexpected error occurred' };
+  //   }
+  // }
 
   @Get('courses')
   @HttpCode(HttpStatus.OK)
