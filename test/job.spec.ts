@@ -27,7 +27,7 @@ describe('JobService', () => {
     await testService.cleanDatabase();
   });
 
-  describe('getAllJobs', () => {
+  describe('GET /jobs', () => {
     it('should return empty jobs list when no jobs exist', async () => {
       await testService.cleanDatabase();
       const result = await service.getAllJobs({ page: 1, limit: 10 });
@@ -99,7 +99,7 @@ describe('JobService', () => {
     });
   });
 
-  describe('getJobById', () => {
+  describe('GET /jobs/:jobId', () => {
     it('should return job details by id', async () => {
       await testService.cleanDatabase();
       const admin = await testService.createAdmin();
@@ -120,7 +120,7 @@ describe('JobService', () => {
     });
   });
 
-  describe('createJob', () => {
+  describe('POST /jobs', () => {
     it('should create new job with valid admin', async () => {
       await testService.cleanDatabase();
       const admin = await testService.createAdmin();
@@ -175,7 +175,7 @@ describe('JobService', () => {
     });
   });
 
-  describe('updateJob', () => {
+  describe('PUT /jobs/:jobId', () => {
     it('should update job with valid admin and ownership', async () => {
       await testService.cleanDatabase();
       const admin = await testService.createAdmin();
@@ -222,7 +222,7 @@ describe('JobService', () => {
     });
   });
 
-  describe('deleteJob', () => {
+  describe('DELETE /jobs/:jobId', () => {
     it('should delete job with valid admin and ownership', async () => {
       await testService.cleanDatabase();
       const admin = await testService.createAdmin();
@@ -254,7 +254,7 @@ describe('JobService', () => {
     });
   });
 
-  describe('getAdminJobs', () => {
+  describe('GET /jobs/admin/my-posts', () => {
     it('should return jobs created by specific admin', async () => {
       await testService.cleanDatabase();
       const admin = await testService.createAdmin();
@@ -284,7 +284,7 @@ describe('JobService', () => {
     });
   });
 
-  describe('searchJobs', () => {
+  describe('GET /jobs/search', () => {
     it('should search jobs with query', async () => {
       await testService.cleanDatabase();
       const admin = await testService.createAdmin();
@@ -332,7 +332,7 @@ describe('JobService', () => {
     });
   });
 
-  describe('getJobStatistics', () => {
+  describe('GET /jobs/statistics', () => {
     it('should return job statistics for admin', async () => {
       await testService.cleanDatabase();
       const admin = await testService.createAdmin();
@@ -360,7 +360,7 @@ describe('JobService', () => {
     });
   });
 
-  describe('getCompanies', () => {
+  describe('GET /jobs/companies', () => {
     it('should return list of companies with job counts', async () => {
       await testService.cleanDatabase();
       const admin = await testService.createAdmin();
@@ -388,7 +388,7 @@ describe('JobService', () => {
     });
   });
 
-  describe('getLocations', () => {
+  describe('GET /jobs/locations', () => {
     it('should return list of locations with job counts', async () => {
       await testService.cleanDatabase();
       const admin = await testService.createAdmin();
