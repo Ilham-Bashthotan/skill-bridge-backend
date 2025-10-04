@@ -95,65 +95,6 @@ describe('MentorService', () => {
     });
   });
 
-  describe('GET /mentors/profile', () => {
-    it('should get mentor profile', async () => {
-      const result = await mentorService.getProfile(mentorId);
-
-      logger.info(result);
-      expect(result).toBeDefined();
-      expect(result.id).toBe(mentorId);
-      expect(result.name).toBe('Test Mentor');
-      expect(result.email).toBe('mentor@example.com');
-      expect(result.role).toBe('mentor');
-      expect(result.bio).toBe('Experienced programming mentor');
-      expect(result.experience).toBe('5 years');
-      expect(result.email_verified).toBeDefined();
-      expect(result.created_at).toBeDefined();
-      expect(result.updated_at).toBeDefined();
-    });
-
-    it('should throw error for non-existent mentor', async () => {
-      await expect(mentorService.getProfile(99999)).rejects.toThrow();
-    });
-
-    it('should throw error for user who is not a mentor', async () => {
-      await expect(mentorService.getProfile(studentId)).rejects.toThrow();
-    });
-  });
-
-  describe('PUT /mentors/rofile', () => {
-    it('should update mentor profile', async () => {
-      const updateData = {
-        name: 'Updated Mentor Name',
-        bio: 'Updated mentor bio with more experience',
-        experience: '7 years',
-        phone: '08123456789',
-      };
-
-      const result = await mentorService.updateProfile(mentorId, updateData);
-
-      logger.info(result);
-      expect(result).toBeDefined();
-      expect(result.message).toBe('Mentor profile updated successfully');
-      expect(result.user).toBeDefined();
-      expect(result.user.id).toBe(mentorId);
-      expect(result.user.bio).toBe(updateData.bio);
-      expect(result.user.experience).toBe(updateData.experience);
-      expect(result.user.updatedAt).toBeDefined();
-    });
-
-    it('should throw error for non-existent mentor', async () => {
-      const updateData = {
-        bio: 'Updated bio',
-        experience: '7 years',
-      };
-
-      await expect(
-        mentorService.updateProfile(99999, updateData),
-      ).rejects.toThrow();
-    });
-  });
-
   describe('GET /mentors/courses/assigned', () => {
     it('should get assigned courses', async () => {
       const result = await mentorService.getAssignedCourses(mentorId);

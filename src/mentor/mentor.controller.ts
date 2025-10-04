@@ -11,7 +11,6 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { MentorService } from './mentor.service';
-import { UpdateMentorProfileDto } from './dto/update-mentor-profile.dto';
 import { CreateMaterialDto } from './dto/create-material.dto';
 import { UpdateMaterialDto } from './dto/update-material.dto';
 import { UpdateMentorStatusDto } from './dto/update-mentor-status.dto';
@@ -26,21 +25,6 @@ export class MentorController {
   @HttpCode(HttpStatus.OK)
   async getDashboard(@Auth() user: User) {
     return this.mentorService.getDashboard(user.id);
-  }
-
-  @Get('profile')
-  @HttpCode(HttpStatus.OK)
-  async getProfile(@Auth() user: User) {
-    return this.mentorService.getProfile(user.id);
-  }
-
-  @Put('profile')
-  @HttpCode(HttpStatus.OK)
-  async updateProfile(
-    @Auth() user: User,
-    @Body() updateData: UpdateMentorProfileDto,
-  ) {
-    return this.mentorService.updateProfile(user.id, updateData);
   }
 
   @Get('courses/assigned')

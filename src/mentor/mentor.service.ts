@@ -4,7 +4,6 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../common/prisma.service';
-import { UpdateMentorProfileDto } from './dto/update-mentor-profile.dto';
 import { CreateMaterialDto } from './dto/create-material.dto';
 import { UpdateMaterialDto } from './dto/update-material.dto';
 import { UpdateMentorStatusDto } from './dto/update-mentor-status.dto';
@@ -60,71 +59,6 @@ export class MentorService {
       total_students: totalStudents,
       active_consultations: activeConsultations,
       forum_answers_given: forumAnswersGiven,
-    };
-  }
-
-  async getProfile(mentorId: number) {
-    const mentor = await this.prismaService.user.findUnique({
-      where: { id: mentorId, role: 'mentor' },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        role: true,
-        bio: true,
-        experience: true,
-        emailVerified: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-
-    if (!mentor) {
-      throw new NotFoundException('Mentor profile not found');
-    }
-
-    return {
-      id: mentor.id,
-      name: mentor.name,
-      email: mentor.email,
-      phone: mentor.phone,
-      role: mentor.role,
-      bio: mentor.bio,
-      experience: mentor.experience,
-      email_verified: mentor.emailVerified,
-      created_at: mentor.createdAt,
-      updated_at: mentor.updatedAt,
-    };
-  }
-
-  async updateProfile(mentorId: number, updateData: UpdateMentorProfileDto) {
-    // Verify mentor exists
-    const mentor = await this.prismaService.user.findUnique({
-      where: { id: mentorId, role: 'mentor' },
-    });
-
-    if (!mentor) {
-      throw new NotFoundException('Mentor profile not found');
-    }
-
-    const updatedMentor = await this.prismaService.user.update({
-      where: { id: mentorId },
-      data: {
-        ...updateData,
-        updatedAt: new Date(),
-      },
-      select: {
-        id: true,
-        bio: true,
-        experience: true,
-        updatedAt: true,
-      },
-    });
-
-    return {
-      message: 'Mentor profile updated successfully',
-      user: updatedMentor,
     };
   }
 
