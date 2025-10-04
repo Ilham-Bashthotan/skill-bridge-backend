@@ -254,4 +254,163 @@ export class TestService {
       );
     }
   }
+
+  // Helper methods for creating mock data in tests
+  static createMockUser(overrides = {}) {
+    return {
+      id: 1,
+      name: 'Test User',
+      email: 'test@example.com',
+      role: 'student',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      ...overrides,
+    };
+  }
+
+  static createMockStudent(overrides = {}) {
+    return TestService.createMockUser({
+      role: 'student',
+      name: 'Test Student',
+      email: 'student@example.com',
+      ...overrides,
+    });
+  }
+
+  static createMockAdmin(overrides = {}) {
+    return TestService.createMockUser({
+      role: 'admin',
+      name: 'Test Admin',
+      email: 'admin@example.com',
+      bio: 'System administrator',
+      experience: '10 years',
+      ...overrides,
+    });
+  }
+
+  static createMockMentor(overrides = {}) {
+    return TestService.createMockUser({
+      role: 'mentor',
+      name: 'Test Mentor',
+      email: 'mentor@example.com',
+      bio: 'Experienced programming mentor',
+      experience: '5 years',
+      ...overrides,
+    });
+  }
+
+  static createMockForumQuestion(overrides = {}) {
+    return {
+      id: 1,
+      studentId: 1,
+      title: 'Test Question',
+      message: 'Test message',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      student: TestService.createMockStudent(),
+      answers: [],
+      _count: { answers: 0 },
+      ...overrides,
+    };
+  }
+
+  static createMockForumQuestions(count = 3) {
+    return Array.from({ length: count }, (_, index) =>
+      TestService.createMockForumQuestion({
+        id: index + 1,
+        title: `Test Question ${index + 1}`,
+        message: `Test message ${index + 1}`,
+      }),
+    );
+  }
+
+  static createMockPaginationResult(
+    data: any[],
+    page = 1,
+    limit = 10,
+    total?: number,
+  ) {
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        total: total || data.length,
+        totalPages: Math.ceil((total || data.length) / limit),
+      },
+    };
+  }
+
+  static createMockSearchResult(data: any[], query = 'test', total?: number) {
+    return {
+      questions: data,
+      search_metadata: {
+        query,
+        total_results: total || data.length,
+        search_time: '0.05s',
+      },
+      pagination: {
+        page: 1,
+        limit: 10,
+        total: total || data.length,
+        totalPages: Math.ceil((total || data.length) / 10),
+      },
+    };
+  }
+
+  static createMockStatistics(overrides = {}) {
+    return {
+      total_questions: 100,
+      answered_questions: 60,
+      unanswered_questions: 40,
+      questions_this_month: 20,
+      questions_this_year: 80,
+      most_active_students: [
+        {
+          student_id: 1,
+          student_name: 'Active Student',
+          question_count: 5,
+        },
+      ],
+      average_answers_per_question: 1.5,
+      ...overrides,
+    };
+  }
+
+  // Common DTO objects for testing
+  static createValidCreateQuestionDto(overrides = {}) {
+    return {
+      title: 'New Question',
+      message: 'New question message',
+      ...overrides,
+    };
+  }
+
+  static createValidUpdateQuestionDto(overrides = {}) {
+    return {
+      title: 'Updated Title',
+      message: 'Updated message',
+      ...overrides,
+    };
+  }
+
+  static createValidSearchQueryDto(overrides = {}) {
+    return {
+      q: 'test',
+      page: 1,
+      limit: 10,
+      ...overrides,
+    };
+  }
+
+  // Mock service responses
+  static createMockServiceResponse(
+    data: Record<string, any>,
+    message = 'Success',
+  ) {
+    return {
+      message,
+      ...data,
+    };
+  }
 }

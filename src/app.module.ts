@@ -5,6 +5,7 @@ import { MentorModule } from './mentor/mentor.module';
 import { StudentModule } from './student/student.module';
 import { AdminModule } from './admin/admin.module';
 import { JobModule } from './job/job.module';
+import { ForumQuestionModule } from './forum_question/forum_question.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { JobModule } from './job/job.module';
     StudentModule,
     AdminModule,
     JobModule,
+    ForumQuestionModule,
   ],
   controllers: [],
   providers: [],

@@ -296,38 +296,6 @@ Advanced search for forum questions.
 }
 ```
 
-### GET /forum/questions/popular
-Get most popular questions (by answer count and recent activity).
-
-**Query Parameters:**
-- `page` (optional): Page number (default: 1)
-- `limit` (optional): Items per page (default: 10)
-- `timeframe` (optional): Time period (week, month, year, all)
-
-**Success Response:**
-```json
-{
-  "questions": [
-    {
-      "id": 1,
-      "title": "How to implement React hooks?",
-      "message": "I'm having trouble understanding...",
-      "student": {
-        "name": "John Doe"
-      },
-      "answers_count": 15,
-      "created_at": "2025-09-10T09:00:00Z"
-    }
-  ],
-  "pagination": {
-    "page": 1,
-    "limit": 10,
-    "total": 20,
-    "total_pages": 2
-  }
-}
-```
-
 ### GET /forum/questions/unanswered
 Get questions that haven't been answered yet.
 
@@ -413,39 +381,6 @@ Authorization: Bearer <admin_token>
   "error": "Unauthorized access"
 }
 ```
-
-### POST /forum/questions/:questionId/report
-Report a question for inappropriate content.
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Request:**
-```json
-{
-  "reason": "inappropriate content",
-  "description": "This question contains inappropriate language"
-}
-```
-
-**Success Response:**
-```json
-{
-  "message": "Question reported successfully",
-  "report_id": 1
-}
-```
-
-**Error Response:**
-```json
-{
-  "error": "Reason is required"
-}
-```
-
----
 
 ## Error Response (General)
 All error responses follow this format:
