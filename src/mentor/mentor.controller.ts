@@ -9,15 +9,22 @@ import {
   HttpStatus,
   ParseIntPipe,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
+import { Role } from '@prisma/client';
 import { MentorService } from './mentor.service';
 import { CreateMaterialDto } from './dto/create-material.dto';
 import { UpdateMaterialDto } from './dto/update-material.dto';
 import { UpdateMentorStatusDto } from './dto/update-mentor-status.dto';
+import { JwtAuthGuard } from '../common/jwt-auth.guard';
+import { RolesGuard } from '../common/roles.guard';
+import { Roles } from '../common/roles.decorator';
 import { Auth } from '../common/auth.decorator';
 import type { User } from '@prisma/client';
 
 @Controller('mentors')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.mentor)
 export class MentorController {
   constructor(private readonly mentorService: MentorService) {}
 
