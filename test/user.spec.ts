@@ -154,49 +154,75 @@ describe('UserController', () => {
     });
   });
 
-  describe('GET /users/profile/:id', () => {
-    let userId: number;
+  describe('GET /users/profile', () => {
+    let token: string;
 
     beforeEach(async () => {
       await testService.cleanDatabase();
-      const user = await testService.createUser();
-      userId = user.id;
+      await testService.createUser();
+
+      // Login to get token
+      const loginResponse = await request(app.getHttpServer() as Server)
+        .post('/auth/login')
+        .send({
+          email: 'test@example.com',
+          password: 'test123',
+        });
+
+      token = (loginResponse.body as LoginResponse).token;
     });
 
-    it('should be able to get user profile', async () => {
-      const response = await request(app.getHttpServer() as Server).get(
-        `/users/profile/${userId}`,
-      );
+    it('should be able to get user profile with valid token', async () => {
+      const response = await request(app.getHttpServer() as Server)
+        .get('/users/profile')
+        .set('Authorization', `Bearer ${token}`);
 
       logger.info(response.body);
       const body = response.body as UserResponse;
       expect(response.status).toBe(HttpStatus.OK);
-      expect(body.id).toBe(userId);
       expect(body.email).toBe('test@example.com');
       expect(body.name).toBe('Test User');
     });
 
-    it('should return 404 for non-existent user', async () => {
+    it('should return 401 without token', async () => {
       const response = await request(app.getHttpServer() as Server).get(
-        '/users/profile/99999',
+        '/users/profile',
       );
 
-      expect(response.status).toBe(HttpStatus.NOT_FOUND);
+      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return 401 with invalid token', async () => {
+      const response = await request(app.getHttpServer() as Server)
+        .get('/users/profile')
+        .set('Authorization', 'Bearer invalid_token');
+
+      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });
   });
 
-  describe('PUT /users/profile/:id', () => {
-    let userId: number;
+  describe('PUT /users/profile', () => {
+    let token: string;
 
     beforeEach(async () => {
       await testService.cleanDatabase();
-      const user = await testService.createUser();
-      userId = user.id;
+      await testService.createUser();
+
+      // Login to get token
+      const loginResponse = await request(app.getHttpServer() as Server)
+        .post('/auth/login')
+        .send({
+          email: 'test@example.com',
+          password: 'test123',
+        });
+
+      token = (loginResponse.body as LoginResponse).token;
     });
 
-    it('should be able to update profile', async () => {
+    it('should be able to update profile with valid token', async () => {
       const response = await request(app.getHttpServer() as Server)
-        .put(`/users/profile/${userId}`)
+        .put('/users/profile')
+        .set('Authorization', `Bearer ${token}`)
         .send({
           name: 'Updated Name',
           bio: 'Updated bio',
@@ -209,6 +235,142 @@ describe('UserController', () => {
       expect(body.message).toBe('Profile updated successfully');
       expect(body.user.name).toBe('Updated Name');
       expect(body.user.bio).toBe('Updated bio');
+    });
+
+    it('should return 401 without token', async () => {
+      const response = await request(app.getHttpServer() as Server)
+        .put('/users/profile')
+        .send({
+          name: 'Updated Name',
+          bio: 'Updated bio',
+        });
+
+      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return 401 with invalid token', async () => {
+      const response = await request(app.getHttpServer() as Server)
+        .put('/users/profile')
+        .set('Authorization', 'Bearer invalid_token')
+        .send({
+          name: 'Updated Name',
+          bio: 'Updated bio',
+        });
+
+      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+  });
+
+  describe('PUT /users/change-password', () => {
+    let token: string;
+
+    beforeEach(async () => {
+      await testService.cleanDatabase();
+      await testService.createUser();
+
+      // Login to get token
+      const loginResponse = await request(app.getHttpServer() as Server)
+        .post('/auth/login')
+        .send({
+          email: 'test@example.com',
+          password: 'test123',
+        });
+
+      token = (loginResponse.body as LoginResponse).token;
+    });
+
+    it('should be able to change password with valid token and correct current password', async () => {
+      const response = await request(app.getHttpServer() as Server)
+        .put('/users/change-password')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          current_password: 'test123',
+          new_password: 'newPassword123',
+        });
+
+      logger.info(response.body);
+      expect(response.status).toBe(HttpStatus.OK);
+      expect((response.body as { message: string }).message).toBe(
+        'Password changed successfully',
+      );
+    });
+
+    it('should return 401 without token', async () => {
+      const response = await request(app.getHttpServer() as Server)
+        .put('/users/change-password')
+        .send({
+          current_password: 'test123',
+          new_password: 'newPassword123',
+        });
+
+      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return 400 with incorrect current password', async () => {
+      const response = await request(app.getHttpServer() as Server)
+        .put('/users/change-password')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          current_password: 'wrongPassword',
+          new_password: 'newPassword123',
+        });
+
+      expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+    });
+  });
+
+  describe('DELETE /users/account', () => {
+    let token: string;
+
+    beforeEach(async () => {
+      await testService.cleanDatabase();
+      await testService.createUser();
+
+      // Login to get token
+      const loginResponse = await request(app.getHttpServer() as Server)
+        .post('/auth/login')
+        .send({
+          email: 'test@example.com',
+          password: 'test123',
+        });
+
+      token = (loginResponse.body as LoginResponse).token;
+    });
+
+    it('should be able to delete account with valid token', async () => {
+      const response = await request(app.getHttpServer() as Server)
+        .delete('/users/account')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          password: 'test123',
+        });
+
+      logger.info(response.body);
+      expect(response.status).toBe(HttpStatus.OK);
+      expect((response.body as { message: string }).message).toBe(
+        'Account deleted successfully',
+      );
+    });
+
+    it('should return 401 without token', async () => {
+      const response = await request(app.getHttpServer() as Server)
+        .delete('/users/account')
+        .send({
+          password: 'test123',
+        });
+
+      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return 401 with invalid token', async () => {
+      const response = await request(app.getHttpServer() as Server)
+        .delete('/users/account')
+        .set('Authorization', 'Bearer invalid_token')
+        .send({
+          password: 'test123',
+        });
+
+      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });
   });
 });

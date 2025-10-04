@@ -16,17 +16,12 @@ import { AdminService } from './admin.service';
 import { JwtAuthGuard } from '../common/jwt-auth.guard';
 import { RolesGuard } from '../common/roles.guard';
 import { Roles } from '../common/roles.decorator';
-import { User } from '../common/user.decorator';
+import { Auth } from '../common/auth.decorator';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { CreateMentorDto } from './dto/create-mentor.dto';
 import { UpdateAdminProfileDto } from './dto/update-admin-profile.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
-
-interface UserPayload {
-  id: number;
-  email: string;
-  role: Role;
-}
+import type { User } from '@prisma/client';
 
 @Controller('admin')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -47,7 +42,7 @@ export class AdminController {
 
   @Get('profile')
   @HttpCode(HttpStatus.OK)
-  async getProfile(@User() user: UserPayload) {
+  async getProfile(@Auth() user: User) {
     const data = await this.adminService.getProfile(user.id);
     return {
       statusCode: HttpStatus.OK,
@@ -58,10 +53,7 @@ export class AdminController {
 
   @Put('profile')
   @HttpCode(HttpStatus.OK)
-  async updateProfile(
-    @User() user: UserPayload,
-    @Body() dto: UpdateAdminProfileDto,
-  ) {
+  async updateProfile(@Auth() user: User, @Body() dto: UpdateAdminProfileDto) {
     const data = await this.adminService.updateProfile(user.id, dto);
     return {
       statusCode: HttpStatus.OK,

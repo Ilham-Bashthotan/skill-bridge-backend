@@ -5,10 +5,10 @@ import {
   Put,
   Delete,
   Body,
-  Param,
   HttpCode,
   HttpStatus,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -16,6 +16,9 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { DeleteAccountDto } from './dto/delete-account.dto';
+import { Auth } from '../common/auth.decorator';
+import { JwtAuthGuard } from '../common/jwt-auth.guard';
+import type { User } from '@prisma/client';
 
 @Controller()
 export class UserController {
@@ -58,40 +61,47 @@ export class UserController {
     };
   }
 
-  @Get('users/profile/:id')
-  async getProfile(@Param('id') id: string) {
-    const userId = parseInt(id, 10);
-    return await this.userService.getProfile(userId);
+  @Get('users/profile')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async getProfile(@Auth() user: User) {
+    return await this.userService.getProfile(user.id);
   }
 
-  @Put('users/profile/:id')
+  @Put('users/profile')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
   async updateProfile(
-    @Param('id') id: string,
+    @Auth() user: User,
     @Body() updateProfileDto: UpdateProfileDto,
   ) {
-    const userId = parseInt(id, 10);
-    const user = await this.userService.updateProfile(userId, updateProfileDto);
+    const updatedUser = await this.userService.updateProfile(
+      user.id,
+      updateProfileDto,
+    );
     return {
       message: 'Profile updated successfully',
-      user,
+      user: updatedUser,
     };
   }
 
-  @Put('users/change-password/:id')
+  @Put('users/change-password')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
   async changePassword(
-    @Param('id') id: string,
+    @Auth() user: User,
     @Body() changePasswordDto: ChangePasswordDto,
   ) {
-    const userId = parseInt(id, 10);
-    return await this.userService.changePassword(userId, changePasswordDto);
+    return await this.userService.changePassword(user.id, changePasswordDto);
   }
 
-  @Delete('users/account/:id')
+  @Delete('users/account')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
   async deleteAccount(
-    @Param('id') id: string,
+    @Auth() user: User,
     @Body() deleteAccountDto: DeleteAccountDto,
   ) {
-    const userId = parseInt(id, 10);
-    return await this.userService.deleteAccount(userId, deleteAccountDto);
+    return await this.userService.deleteAccount(user.id, deleteAccountDto);
   }
 }
