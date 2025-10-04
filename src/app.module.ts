@@ -4,8 +4,18 @@ import { UserModule } from './user/user.module';
 import { MentorModule } from './mentor/mentor.module';
 import { StudentModule } from './student/student.module';
 import { AdminModule } from './admin/admin.module';
+import { JobModule } from './job/job.module';
 
 @Module({
-  imports: [CommonModule, UserModule, MentorModule, StudentModule, AdminModule],
+  imports: [
+    CommonModule,
+    UserModule,
+    MentorModule,
+    StudentModule,
+    AdminModule,
+    JobModule,
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

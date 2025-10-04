@@ -152,6 +152,72 @@ export class TestService {
     });
   }
 
+  async createAdmin(suffix = '') {
+    let email = 'admin@example.com';
+    let name = 'Test Admin';
+    if (suffix) {
+      email = `admin${suffix}@example.com`;
+      name = `Test Admin ${suffix}`;
+    }
+    const hashedPassword = await bcrypt.hash('admin123', 10);
+    return this.prismaService.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role: 'admin',
+        bio: 'System administrator',
+        experience: '10 years',
+      },
+    });
+  }
+
+  async getAdmin() {
+    return this.prismaService.user.findUnique({
+      where: {
+        email: 'admin@example.com',
+      },
+    });
+  }
+
+  async deleteAdmin() {
+    await this.prismaService.user.deleteMany({
+      where: {
+        email: 'admin@example.com',
+      },
+    });
+  }
+
+  async createJob(adminId: number, suffix = '') {
+    return this.prismaService.job.create({
+      data: {
+        adminId,
+        title: `Test Job${suffix ? ` ${suffix}` : ''}`,
+        description: `Test job description${suffix ? ` ${suffix}` : ''}`,
+        company: `Test Company${suffix ? ` ${suffix}` : ''}`,
+        requirements: `Test requirements${suffix ? ` ${suffix}` : ''}`,
+        location: `Test Location${suffix ? ` ${suffix}` : ''}`,
+      },
+    });
+  }
+
+  async getJob(adminId: number) {
+    return this.prismaService.job.findFirst({
+      where: {
+        adminId,
+        title: 'Test Job',
+      },
+    });
+  }
+
+  async deleteJob(adminId: number) {
+    await this.prismaService.job.deleteMany({
+      where: {
+        adminId,
+      },
+    });
+  }
+
   async cleanDatabase() {
     try {
       // Clean all test data in correct order to avoid foreign key constraints
@@ -164,6 +230,7 @@ export class TestService {
       await this.prismaService.courseMaterial.deleteMany({});
       await this.prismaService.courseMentor.deleteMany({});
       await this.prismaService.course.deleteMany({});
+      await this.prismaService.job.deleteMany({});
 
       // Clean up all test users including those with suffixes
       await this.prismaService.user.deleteMany({
@@ -172,8 +239,10 @@ export class TestService {
             { email: 'mentor@example.com' },
             { email: 'test@example.com' },
             { email: 'student@example.com' },
+            { email: 'admin@example.com' },
             { email: { contains: 'mentor' } },
             { email: { contains: 'student' } },
+            { email: { contains: 'admin' } },
           ],
         },
       });
