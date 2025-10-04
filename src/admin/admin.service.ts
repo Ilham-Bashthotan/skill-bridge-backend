@@ -8,12 +8,9 @@ import { PrismaService } from '../common/prisma.service';
 import { Role } from '@prisma/client';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { CreateMentorDto } from './dto/create-mentor.dto';
-import { UpdateAdminProfileDto } from './dto/update-admin-profile.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import {
   AdminDashboardResponse,
-  AdminProfileResponse,
-  UpdateAdminProfileResponse,
   UserListResponse,
   CreateUserResponse,
   DeleteUserResponse,
@@ -51,70 +48,6 @@ export class AdminService {
       courses_count: coursesCount,
       jobs_count: jobsCount,
       forum_questions: forumQuestionsCount,
-    };
-  }
-
-  async getProfile(adminId: number): Promise<AdminProfileResponse> {
-    const admin = await this.prisma.user.findUnique({
-      where: {
-        id: adminId,
-        role: Role.admin,
-      },
-    });
-
-    if (!admin) {
-      throw new NotFoundException('Admin not found');
-    }
-
-    return {
-      id: admin.id,
-      name: admin.name,
-      email: admin.email,
-      phone: admin.phone ?? undefined,
-      role: admin.role,
-      bio: admin.bio ?? undefined,
-      experience: admin.experience ?? undefined,
-      email_verified: admin.emailVerified,
-      created_at: admin.createdAt,
-      updated_at: admin.updatedAt,
-    };
-  }
-
-  async updateProfile(
-    adminId: number,
-    dto: UpdateAdminProfileDto,
-  ): Promise<UpdateAdminProfileResponse> {
-    const admin = await this.prisma.user.findUnique({
-      where: {
-        id: adminId,
-        role: Role.admin,
-      },
-    });
-
-    if (!admin) {
-      throw new NotFoundException('Admin not found');
-    }
-
-    const updatedAdmin = await this.prisma.user.update({
-      where: { id: adminId },
-      data: {
-        ...(dto.name && { name: dto.name }),
-        ...(dto.phone && { phone: dto.phone }),
-        ...(dto.bio && { bio: dto.bio }),
-        ...(dto.experience && { experience: dto.experience }),
-      },
-    });
-
-    return {
-      message: 'Profile updated successfully',
-      user: {
-        id: updatedAdmin.id,
-        name: updatedAdmin.name,
-        phone: updatedAdmin.phone ?? undefined,
-        bio: updatedAdmin.bio ?? undefined,
-        experience: updatedAdmin.experience ?? undefined,
-        updated_at: updatedAdmin.updatedAt,
-      },
     };
   }
 

@@ -2,7 +2,6 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Delete,
   Body,
   Param,
@@ -16,12 +15,9 @@ import { AdminService } from './admin.service';
 import { JwtAuthGuard } from '../common/jwt-auth.guard';
 import { RolesGuard } from '../common/roles.guard';
 import { Roles } from '../common/roles.decorator';
-import { Auth } from '../common/auth.decorator';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { CreateMentorDto } from './dto/create-mentor.dto';
-import { UpdateAdminProfileDto } from './dto/update-admin-profile.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
-import type { User } from '@prisma/client';
 
 @Controller('admin')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -37,27 +33,6 @@ export class AdminController {
       statusCode: HttpStatus.OK,
       message: 'Dashboard data retrieved successfully',
       data,
-    };
-  }
-
-  @Get('profile')
-  @HttpCode(HttpStatus.OK)
-  async getProfile(@Auth() user: User) {
-    const data = await this.adminService.getProfile(user.id);
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'Profile retrieved successfully',
-      data,
-    };
-  }
-
-  @Put('profile')
-  @HttpCode(HttpStatus.OK)
-  async updateProfile(@Auth() user: User, @Body() dto: UpdateAdminProfileDto) {
-    const data = await this.adminService.updateProfile(user.id, dto);
-    return {
-      statusCode: HttpStatus.OK,
-      ...data,
     };
   }
 
