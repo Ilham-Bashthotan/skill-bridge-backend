@@ -423,6 +423,80 @@ export class TestService {
     };
   }
 
+  // Consultation Answer test helpers
+  static createMockConsultationAnswer(overrides = {}) {
+    return {
+      id: 1,
+      consultationsQuestionId: 1,
+      mentorId: 1,
+      message: 'Test consultation answer',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      mentor: TestService.createMockMentor(),
+      question: {
+        id: 1,
+        title: 'Test Question',
+        message: 'Test question message',
+        studentId: 1,
+        student: TestService.createMockStudent(),
+      },
+      ...overrides,
+    };
+  }
+
+  static createMockConsultationAnswers(count = 3) {
+    return Array.from({ length: count }, (_, index) =>
+      TestService.createMockConsultationAnswer({
+        id: index + 1,
+        message: `Test consultation answer ${index + 1}`,
+        consultationsQuestionId: index + 1,
+      }),
+    );
+  }
+
+  static createValidCreateAnswerDto(overrides = {}) {
+    return {
+      consultations_question_id: 1,
+      message: 'New consultation answer',
+      ...overrides,
+    };
+  }
+
+  static createValidUpdateAnswerDto(overrides = {}) {
+    return {
+      message: 'Updated consultation answer',
+      ...overrides,
+    };
+  }
+
+  static createValidGetAnswersQueryDto(overrides = {}) {
+    return {
+      page: 1,
+      limit: 10,
+      sort: 'created_at',
+      order: 'desc',
+      ...overrides,
+    };
+  }
+
+  static createValidSearchAnswersDto(overrides = {}) {
+    return {
+      q: 'test',
+      page: 1,
+      limit: 10,
+      ...overrides,
+    };
+  }
+
+  static createMockAnswerStatistics(overrides = {}) {
+    return {
+      total_answers: 50,
+      answers_this_month: 10,
+      answers_this_year: 35,
+      ...overrides,
+    };
+  }
+
   // Mock service responses
   static createMockServiceResponse(
     data: Record<string, any>,
