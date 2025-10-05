@@ -6,6 +6,7 @@ import { StudentModule } from './student/student.module';
 import { AdminModule } from './admin/admin.module';
 import { JobModule } from './job/job.module';
 import { ForumQuestionModule } from './forum_question/forum_question.module';
+import { ForumAnswerModule } from './forum_answer/forum_answer.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ForumQuestionModule } from './forum_question/forum_question.module';
     AdminModule,
     JobModule,
     ForumQuestionModule,
+    ForumAnswerModule,
   ],
   controllers: [],
   providers: [],

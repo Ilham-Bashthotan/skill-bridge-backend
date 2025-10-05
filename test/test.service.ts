@@ -152,6 +152,16 @@ export class TestService {
     });
   }
 
+  async createForumAnswer(userId: number, questionId: number) {
+    return this.prismaService.forumAnswer.create({
+      data: {
+        userId,
+        questionId,
+        message: 'Test forum answer',
+      },
+    });
+  }
+
   async createAdmin(suffix = '') {
     let email = 'admin@example.com';
     let name = 'Test Admin';
