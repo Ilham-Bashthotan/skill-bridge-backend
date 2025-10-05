@@ -7,6 +7,7 @@ import { AdminModule } from './admin/admin.module';
 import { JobModule } from './job/job.module';
 import { ForumQuestionModule } from './forum_question/forum_question.module';
 import { ForumAnswerModule } from './forum_answer/forum_answer.module';
+import { ConsultationsQuestionModule } from './consultations_question/consultations_question.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ForumAnswerModule } from './forum_answer/forum_answer.module';
     JobModule,
     ForumQuestionModule,
     ForumAnswerModule,
+    ConsultationsQuestionModule,
   ],
   controllers: [],
   providers: [],

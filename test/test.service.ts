@@ -142,6 +142,16 @@ export class TestService {
     });
   }
 
+  async createConsultationAnswer(mentorId: number, questionId: number) {
+    return this.prismaService.consultationAnswer.create({
+      data: {
+        mentorId,
+        consultationsQuestionId: questionId,
+        message: 'Test consultation answer',
+      },
+    });
+  }
+
   async createForumQuestion(studentId: number) {
     return this.prismaService.forumQuestion.create({
       data: {
