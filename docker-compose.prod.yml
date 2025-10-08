@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_URL=${DATABASE_URL}
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    networks:
+      - skill_bridge_backend_network
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: skill_bridge_backend_user
+      POSTGRES_PASSWORD: skill_bridge_backend_password
+      POSTGRES_DB: skill_bridge_backend_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - skill_bridge_backend_network
+
+volumes:
+  postgres_data:
+
+networks:
+  skill_bridge_backend_network:
+    driver: bridge
