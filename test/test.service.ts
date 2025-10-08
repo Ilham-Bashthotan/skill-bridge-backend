@@ -397,6 +397,87 @@ export class TestService {
     };
   }
 
+  // Course test helpers
+  static createMockCourse(overrides = {}) {
+    return {
+      id: 1,
+      title: 'Test Course',
+      description: 'Test course description',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      ...overrides,
+    };
+  }
+
+  static createMockCourses(count = 3) {
+    return Array.from({ length: count }, (_, index) =>
+      TestService.createMockCourse({
+        id: index + 1,
+        title: `Test Course ${index + 1}`,
+        description: `Test course description ${index + 1}`,
+      }),
+    );
+  }
+
+  static createValidCreateCourseDto(overrides = {}) {
+    return {
+      title: 'New Course',
+      description: 'New course description',
+      ...overrides,
+    };
+  }
+
+  static createValidUpdateCourseDto(overrides = {}) {
+    return {
+      title: 'Updated Course',
+      description: 'Updated course description',
+      ...overrides,
+    };
+  }
+
+  static createValidGetCoursesQueryDto(overrides = {}) {
+    return {
+      page: 1,
+      limit: 10,
+      ...overrides,
+    };
+  }
+
+  static createValidAssignMentorDto(overrides = {}) {
+    return {
+      mentor_id: 1,
+      ...overrides,
+    };
+  }
+
+  static createValidGetStudentsQueryDto(overrides = {}) {
+    return {
+      page: 1,
+      limit: 10,
+      ...overrides,
+    };
+  }
+
+  static createMockEnrollmentResponse(overrides = {}) {
+    return {
+      id: 1,
+      course_id: 1,
+      student_id: 1,
+      message: 'Successfully enrolled',
+      ...overrides,
+    };
+  }
+
+  static createMockAssignMentorResponse(overrides = {}) {
+    return {
+      id: 1,
+      course_id: 1,
+      mentor_id: 1,
+      message: 'Mentor assigned successfully',
+      ...overrides,
+    };
+  }
+
   // Common DTO objects for testing
   static createValidCreateQuestionDto(overrides = {}) {
     return {

@@ -9,6 +9,7 @@ import { ForumQuestionModule } from './forum_question/forum_question.module';
 import { ForumAnswerModule } from './forum_answer/forum_answer.module';
 import { ConsultationsQuestionModule } from './consultations_question/consultations_question.module';
 import { ConsultationAnswerModule } from './consultation_answer/consultation_answer.module';
+import { CourseModule } from './course/course.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConsultationAnswerModule } from './consultation_answer/consultation_ans
     ForumAnswerModule,
     ConsultationsQuestionModule,
     ConsultationAnswerModule,
+    CourseModule,
   ],
   controllers: [],
   providers: [],
