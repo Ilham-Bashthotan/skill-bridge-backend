@@ -30,4 +30,8 @@ ENV PORT=3001
 
 EXPOSE ${PORT}
 
-CMD ["node", "dist/src/main"]
+# Copy startup script
+COPY start.sh ./
+RUN chmod +x start.sh
+
+CMD ["./start.sh"]

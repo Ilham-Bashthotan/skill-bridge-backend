@@ -6,15 +6,20 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
-      # Default DATABASE_URL points to the postgres service inside the compose network.
-      # If you deploy to a platform (Render, Railway), set DATABASE_URL in the platform env vars
-      - DATABASE_URL=${DATABASE_URL:-postgresql://skill_bridge_backend_user:skill_bridge_backend_password@postgres:5432/skill_bridge_backend_db}
+      # Force DATABASE_URL to use postgres service inside the compose network
+      - DATABASE_URL=postgresql://skill_bridge_backend_user:skill_bridge_backend_password@postgres:5432/skill_bridge_backend_db
     ports:
       - "3001:3001"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - skill_bridge_backend_network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   postgres:
     image: postgres:15-alpine
@@ -28,6 +33,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - skill_bridge_backend_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skill_bridge_backend_user -d skill_bridge_backend_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

@@ -1,0 +1,7 @@
+POST https://skill-bridge-backend-production-dfdf.up.railway.app/auth/login
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "securePassword123"
+}
