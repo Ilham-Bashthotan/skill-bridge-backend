@@ -30,6 +30,10 @@ ENV PORT=3001
 
 EXPOSE ${PORT}
 
+# Health check for Railway
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:${PORT}/jobs', {timeout: 2000}, (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"
+
 # Copy startup script
 COPY start.sh ./
 RUN chmod +x start.sh

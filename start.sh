@@ -8,10 +8,20 @@ echo "Port: ${PORT:-3001}"
 # Check if DATABASE_URL is set
 if [ -z "$DATABASE_URL" ]; then
     echo "❌ ERROR: DATABASE_URL environment variable is not set!"
+    echo "Please set DATABASE_URL in your Railway environment variables"
     exit 1
 fi
 
-echo "📊 Database URL configured"
+# Mask the DATABASE_URL for security (show only the host part)
+DATABASE_HOST=$(echo "$DATABASE_URL" | sed -n 's/.*@\([^:]*\):.*/\1/p')
+echo "📊 Database configured - Host: $DATABASE_HOST"
+
+# Validate DATABASE_URL format
+if ! echo "$DATABASE_URL" | grep -q "postgresql://"; then
+    echo "❌ ERROR: DATABASE_URL must be a PostgreSQL connection string!"
+    echo "Expected format: postgresql://user:password@host:port/database"
+    exit 1
+fi
 
 # Wait a bit for database to be ready (Railway specific)
 echo "⏳ Waiting for database to be ready..."
